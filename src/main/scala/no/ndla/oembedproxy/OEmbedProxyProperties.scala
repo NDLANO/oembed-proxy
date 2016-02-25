@@ -9,12 +9,12 @@ import scala.io.Source
 object OEmbedProxyProperties extends LazyLogging {
   var OEmbedApiProps: mutable.Map[String, Option[String]] = mutable.HashMap()
   val ApplicationPort = 80
+  val JSonProviderUrl = "http://oembed.com/providers.json"
+  val NdlaOembedServiceUrl = "http://ndla.no/services/oembed"
 
   lazy val ContactEmail = get("CONTACT_EMAIL")
   lazy val HostAddr = get("HOST_ADDR")
   lazy val Domains = get("DOMAINS").split(",") ++ Array(HostAddr)
-  lazy val JSonProviderUrl = get("JSON_PROVIDER_URL")
-  lazy val NdlaOembedServiceUrl = get("NDLA_OEMBED_SERVICE_URL")
 
   def setProperties(properties: Map[String, Option[String]]) = {
     properties.foreach(prop => OEmbedApiProps.put(prop._1, prop._2))
