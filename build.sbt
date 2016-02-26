@@ -1,7 +1,4 @@
-import java.io.FileInputStream
 import java.util.Properties
-
-import sbtdocker.Instructions
 
 val Scalaversion = "2.11.6"
 val Scalatraversion = "2.3.1"
@@ -32,6 +29,7 @@ lazy val oembed_proxy = (project in file(".")).
     scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
       "ndla" %% "logging" % "0.1-SNAPSHOT",
+      "ndla" %% "logging" % "0.1-SNAPSHOT" % "test" classifier "tests",
       "ndla" %% "network" % "0.1-SNAPSHOT",
       "org.scalatra" %% "scalatra" % Scalatraversion,
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
