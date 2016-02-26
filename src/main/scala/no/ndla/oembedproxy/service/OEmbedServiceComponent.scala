@@ -5,7 +5,7 @@ import no.ndla.oembedproxy.model.{HttpRequestException, ProviderNotSupportedExce
 import org.json4s.native.JsonMethods._
 
 import scala.util.Try
-import scalaj.http.{Http, HttpRequest}
+import scalaj.http.{HttpOptions, Http, HttpRequest}
 
 
 trait OEmbedServiceComponent extends LazyLogging {
@@ -24,7 +24,8 @@ trait OEmbedServiceComponent extends LazyLogging {
     }
 
     def get(provider: OEmbedProvider, url: String, maxWidth: Option[String], maxHeight: Option[String]) : OEmbed = {
-      get(Http(provider.requestUrl(url, maxWidth, maxHeight)))
+      val request = Http(provider.requestUrl(url, maxWidth, maxHeight)).option(HttpOptions.followRedirects(true))
+      get(request)
     }
 
     def get(request: HttpRequest): OEmbed = {
@@ -32,9 +33,14 @@ trait OEmbedServiceComponent extends LazyLogging {
       response.isError match {
         case true => throw new HttpRequestException(s"Got ${response.code} ${response.statusLine} when calling ${request.url}")
         case false => {
-          Try {parse(response.body).camelizeKeys.extract[OEmbed]}.toOption match {
-            case Some(x) => x
-            case None => throw new HttpRequestException(s"Unreadable response from ${request.url}")
+          val json = response.body
+          try {
+            parse(json).camelizeKeys.extract[OEmbed]
+          } catch {
+            case e: Exception => {
+              logger.error(s"Could not parse response: $json", e)
+              throw new HttpRequestException(s"Unreadable response from ${request.url}")
+            }
           }
         }
       }

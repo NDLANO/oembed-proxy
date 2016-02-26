@@ -10,6 +10,7 @@ case class OEmbed (
   @(ApiModelProperty @field)(description = "The resource type") `type`: String,
   @(ApiModelProperty @field)(description = "The oEmbed version number. This must be 1.0.") version: String,
   @(ApiModelProperty @field)(description = "A text title, describing the resource.") title: Option[String],
+  @(ApiModelProperty @field)(description = "A text description, describing the resource. Not standard.") description: Option[String],
   @(ApiModelProperty @field)(description = "The name of the author/owner of the resource.") authorName: Option[String],
   @(ApiModelProperty @field)(description = "A URL for the author/owner of the resource.") authorUrl: Option[String],
   @(ApiModelProperty @field)(description = "The name of the resource provider.") providerName: Option[String],
