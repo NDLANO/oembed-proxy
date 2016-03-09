@@ -18,7 +18,6 @@ object JettyLauncher extends LazyLogging {
 
     val servletContext = new ServletContextHandler
     servletContext.setContextPath("/")
-    servletContext.setVirtualHosts(OEmbedProxyProperties.Domains)
     servletContext.addEventListener(new ScalatraListener)
     servletContext.addServlet(classOf[DefaultServlet], "/")
     servletContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false")

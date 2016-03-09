@@ -14,7 +14,6 @@ object OEmbedProxyProperties extends LazyLogging {
 
   lazy val ContactEmail = get("CONTACT_EMAIL")
   lazy val HostAddr = get("HOST_ADDR")
-  lazy val Domains = get("DOMAINS").split(",") ++ Array(HostAddr)
 
   def setProperties(properties: Map[String, Option[String]]) = {
     properties.foreach(prop => OEmbedApiProps.put(prop._1, prop._2))
