@@ -14,7 +14,9 @@ object ProviderLoader {
 class ProviderService extends LazyLogging {
   implicit val formats = org.json4s.DefaultFormats
 
-  val ndlaApprovedUrls = List("http://ndla.no/*/node/*", "https://ndla.no/*/node/*")
+  val ndlaApprovedUrls = List(
+    "http://ndla.no/*/node/*", "https://ndla.no/*/node/*",
+    "http://ndla.no/node/*", "https://ndla.no/node/*")
   val ndlaEndpoint = OEmbedEndpoint(Some(ndlaApprovedUrls), Some(OEmbedProxyProperties.NdlaOembedServiceUrl), None, None)
   val ndlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(ndlaEndpoint))
 
