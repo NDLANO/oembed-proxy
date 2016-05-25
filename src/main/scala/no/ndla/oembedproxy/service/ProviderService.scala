@@ -19,7 +19,7 @@ class ProviderService extends LazyLogging {
     "http://ndla.no/*/node/*", "https://ndla.no/*/node/*",
     "http://ndla.no/node/*", "https://ndla.no/node/*")
   val ndlaEndpoint = OEmbedEndpoint(Some(ndlaApprovedUrls), Some(OEmbedProxyProperties.NdlaOembedServiceUrl), None, None)
-  val ndlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(ndlaEndpoint), (url) => url.removeAllParams())
+  val ndlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(ndlaEndpoint), url => url.removeAllParams())
 
   val youtubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
   val youTubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(youtubeEndpoint))

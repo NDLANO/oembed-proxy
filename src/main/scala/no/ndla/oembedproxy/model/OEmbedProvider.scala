@@ -3,7 +3,7 @@ package no.ndla.oembedproxy.model
 import com.netaporter.uri.Uri.parse
 
 
-case class OEmbedProvider (providerName: String, providerUrl: String, endpoints: List[OEmbedEndpoint], urlParser: (String) => String = (x) => x) {
+case class OEmbedProvider (providerName: String, providerUrl: String, endpoints: List[OEmbedEndpoint], urlParser: String => String = x => x) {
 
   def supports(url: String):Boolean = {
     endpoints.exists(_.supports(url)) || hostMatches(url)
