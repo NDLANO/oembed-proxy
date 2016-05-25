@@ -3,7 +3,7 @@ package no.ndla.oembedproxy.model
 import com.netaporter.uri.Uri.parse
 
 
-case class OEmbedProvider (providerName: String, providerUrl: String, endpoints: List[OEmbedEndpoint]) {
+case class OEmbedProvider (providerName: String, providerUrl: String, endpoints: List[OEmbedEndpoint], urlParser: String => String = x => x) {
 
   def supports(url: String):Boolean = {
     endpoints.exists(_.supports(url)) || hostMatches(url)
@@ -13,7 +13,7 @@ case class OEmbedProvider (providerName: String, providerUrl: String, endpoints:
     parse(url).host == parse(providerUrl).host
   }
 
-  def requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
+  private def _requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
     endpoints.find(_.url.isDefined) match {
       case None => throw new RuntimeException(s"The provider '$providerName' has no embed-url available")
       case Some(endpoint) => {
@@ -24,5 +24,7 @@ case class OEmbedProvider (providerName: String, providerUrl: String, endpoints:
       }
     }
   }
+
+  def requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = _requestUrl(urlParser(url), maxWidth, maxHeight)
 }
 
