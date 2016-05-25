@@ -24,8 +24,10 @@ class ProviderService extends LazyLogging {
   val youtubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
   val youTubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(youtubeEndpoint))
 
+  val youtuProvider = OEmbedProvider("YouTube", "http://youtu.be", List(youtubeEndpoint))
+
   def loadProviders(): List[OEmbedProvider] = {
-    ndlaProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
+    ndlaProvider :: youtuProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
   }
 
   def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
