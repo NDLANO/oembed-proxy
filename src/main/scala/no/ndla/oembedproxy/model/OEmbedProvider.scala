@@ -17,10 +17,11 @@ case class OEmbedProvider (providerName: String, providerUrl: String, endpoints:
     endpoints.find(_.url.isDefined) match {
       case None => throw new RuntimeException(s"The provider '$providerName' has no embed-url available")
       case Some(endpoint) => {
+        val mandatoryQueryParams = if(endpoint.mandatoryQueryParams.nonEmpty) s"&${endpoint.mandatoryQueryParams.mkString("&")}" else ""
         val embedUrl = endpoint.url.get.replace("{format}", "json")  // Some providers have {format} instead of ?format=
         val width = maxWidth.map(s => s"&maxwidth=$s").getOrElse("")
         val height = maxHeight.map(s => s"&maxheight=$s").getOrElse("")
-        s"$embedUrl?url=$url$width$height&format=json"
+        s"$embedUrl?url=$url$width$height&format=json$mandatoryQueryParams"
       }
     }
   }

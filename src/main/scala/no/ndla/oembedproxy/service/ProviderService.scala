@@ -15,6 +15,9 @@ object ProviderLoader {
 class ProviderService extends LazyLogging {
   implicit val formats = org.json4s.DefaultFormats
 
+  val goOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List("oembed=true"))
+  val goOpenProvider = OEmbedProvider("GoOpen.no", "http://www.goopen.no", goOpenEndpoint :: Nil)
+
   val ndlaApprovedUrls = List(
     "http://ndla.no/*/node/*", "https://ndla.no/*/node/*",
     "http://ndla.no/node/*", "https://ndla.no/node/*")
@@ -23,11 +26,10 @@ class ProviderService extends LazyLogging {
 
   val youtubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
   val youTubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(youtubeEndpoint))
-
   val youtuProvider = OEmbedProvider("YouTube", "http://youtu.be", List(youtubeEndpoint))
 
   def loadProviders(): List[OEmbedProvider] = {
-    ndlaProvider :: youtuProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
+    ndlaProvider :: youtuProvider :: goOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
   }
 
   def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
@@ -50,7 +52,7 @@ class ProviderService extends LazyLogging {
 
     } catch {
       case e: Exception => {
-        logger.warn(s"Could not parse ${json}. Defaulting to only NDLA and Youtube as oEmbed-providers.")
+        logger.warn(s"Could not parse $json. Defaulting to only NDLA, Youtube and GoOpen as oEmbed-providers.")
         List(youTubeProvider)
       }
     }
