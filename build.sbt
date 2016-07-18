@@ -1,3 +1,11 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 import java.util.Properties
 
 val Scalaversion = "2.11.6"
@@ -79,17 +87,4 @@ imageNames in docker := Seq(
     tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
 
-publishTo := {
-  val nexus = "https://nexus.knowit.no/nexus/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/ndla-snapshots")
-  else
-    Some("releases"  at nexus + "content/repositories/ndla-releases")
-}
-
-resolvers ++= Seq(
-  "Snapshot Sonatype Nexus Repository Manager" at "https://nexus.knowit.no/nexus/content/repositories/ndla-snapshots",
-  "Release Sonatype Nexus Repository Manager" at "https://nexus.knowit.no/nexus/content/repositories/ndla-releases"
-)
-
-credentials += Credentials("Sonatype Nexus Repository Manager", "nexus.knowit.no", "ndla", "1814Ndla")
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")

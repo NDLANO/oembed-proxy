@@ -1,3 +1,11 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 import javax.servlet.ServletContext
 
 import no.ndla.oembedproxy.controller.OEmbedProxyController

@@ -1,3 +1,11 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 package no.ndla.oembedproxy.model
 
 import java.text.SimpleDateFormat
