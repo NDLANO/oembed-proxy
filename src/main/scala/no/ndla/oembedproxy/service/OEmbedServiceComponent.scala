@@ -46,7 +46,7 @@ trait OEmbedServiceComponent extends LazyLogging {
             parse(json).camelizeKeys.extract[OEmbed]
           } catch {
             case e: Exception => {
-              logger.error(s"Could not parse response: $json", e)
+              logger.warn(s"Could not parse response: $json", e)
               throw new HttpRequestException(s"Unreadable response from ${request.url}")
             }
           }

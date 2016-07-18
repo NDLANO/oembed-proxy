@@ -20,6 +20,9 @@ object OEmbedProxyProperties extends LazyLogging {
   val JSonProviderUrl = "http://oembed.com/providers.json"
   val NdlaOembedServiceUrl = "http://ndla.no/services/oembed"
 
+  val CorrelationIdKey = "correlationID"
+  val CorrelationIdHeader = "X-Correlation-ID"
+
   lazy val ContactEmail = get("CONTACT_EMAIL")
   lazy val HostAddr = get("HOST_ADDR")
 

@@ -8,125 +8,59 @@
 
 package no.ndla.oembedproxy.service
 
-import no.ndla.oembedproxy.UnitSuite
+import no.ndla.network.model.HttpRequestException
+import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider}
+import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
+import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 
-import scalaj.http.{HttpRequest, HttpResponse}
+import scala.util.{Failure, Success}
+import scalaj.http.HttpRequest
 
-class ProviderServiceTest extends UnitSuite {
+class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
-  val IncompleteProvider =
-    """
-      |{
-      |    "provider_name": "Gfycat",
-      |    "provider_url": "https://gfycat.com/",
-      |    "endpoints": [
-      |      {
-      |        "schemes": [
-      |          "http://gfycat.com/*",
-      |          "http://www.gfycat.com/*",
-      |          "https://gfycat.com/*",
-      |          "https://www.hgfycat.com/*"
-      |        ]
-      |      },
-      |      {
-      |        "url": "https://api.gfycat.com/v1/oembed",
-      |        "discovery": true
-      |      }
-      |    ]
-      |  }
-    """.stripMargin
+  val IncompleteProvider = OEmbedProvider("gfycat", "https://gfycat.com", List(OEmbedEndpoint(Some(List("http://gfycat.com/*")), None, None, None)))
+  val CompleteProvider = OEmbedProvider("IFTTT", "http://www.ifttt.com", List(OEmbedEndpoint(Some(List("http://ifttt.com/recipes/*")), Some("http://www.ifttt.com/oembed/"), Some(true), None)))
 
-  val CompleteProvider =
-    """
-      |{
-      |    "provider_name": "IFTTT",
-      |    "provider_url": "http://www.ifttt.com/",
-      |    "endpoints": [
-      |      {
-      |        "schemes": [
-      |          "http://ifttt.com/recipes/*"
-      |        ],
-      |        "url": "http://www.ifttt.com/oembed/",
-      |        "discovery": true
-      |      }
-      |    ]
-      |  }
-    """.stripMargin
-
-  val BodyWithOneIncompleteProvider = s"[$IncompleteProvider]"
-  val BodyWithOneCompleteProvider = s"[$CompleteProvider]"
-  val BodyWithOneCompleteAndOneIncomplete = s"[$IncompleteProvider,$CompleteProvider]"
-
-  var service: ProviderService = _
-
-  override def beforeEach() = {
-    service = new ProviderService
-  }
+  override val providerService = new ProviderService
 
   test("That loadProvidersFromRequest does not return an incomplete provider") {
-    val httpRequest = mock[HttpRequest]
-    val httpResponse = mock[HttpResponse[String]]
+    when(ndlaClient.fetch[List[OEmbedProvider]]
+        (any[HttpRequest], any[Option[String]], any[Option[String]])
+        (any[Manifest[List[OEmbedProvider]]])
+    ).thenReturn(Success(List(IncompleteProvider)))
 
-    when(httpRequest.asString).thenReturn(httpResponse)
-    when(httpResponse.isError).thenReturn(false)
-    when(httpResponse.body).thenReturn(BodyWithOneIncompleteProvider)
-
-    val providers = service.loadProvidersFromRequest(httpRequest)
+    val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
     providers.size should be(0)
   }
 
   test("That loadProvidersFromRequest works for a single provider") {
-    val httpRequest = mock[HttpRequest]
-    val httpResponse = mock[HttpResponse[String]]
+    when(ndlaClient.fetch[List[OEmbedProvider]]
+      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[Manifest[List[OEmbedProvider]]])
+    ).thenReturn(Success(List(CompleteProvider)))
 
-    when(httpRequest.asString).thenReturn(httpResponse)
-    when(httpResponse.isError).thenReturn(false)
-    when(httpResponse.body).thenReturn(BodyWithOneCompleteProvider)
-
-    val providers = service.loadProvidersFromRequest(httpRequest)
+    val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
     providers.size should be(1)
   }
 
   test("That loadProvidersFromRequest only returns the complete provider") {
-    val httpRequest = mock[HttpRequest]
-    val httpResponse = mock[HttpResponse[String]]
+    when(ndlaClient.fetch[List[OEmbedProvider]]
+      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[Manifest[List[OEmbedProvider]]])
+    ).thenReturn(Success(List(IncompleteProvider, CompleteProvider)))
 
-    when(httpRequest.asString).thenReturn(httpResponse)
-    when(httpResponse.isError).thenReturn(false)
-    when(httpResponse.body).thenReturn(BodyWithOneCompleteAndOneIncomplete)
-
-    val providers = service.loadProvidersFromRequest(httpRequest)
+    val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
     providers.size should be(1)
   }
 
   test("That loadProvidersFromRequest returns youtube as provider when http-error") {
-    val url = "http://ndla.no"
-    val httpRequest = mock[HttpRequest]
-    val httpResponse = mock[HttpResponse[String]]
+    when(ndlaClient.fetch[List[OEmbedProvider]]
+      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[Manifest[List[OEmbedProvider]]])
+    ).thenReturn(Failure(new HttpRequestException("En feil oppstod")))
 
-    when(httpRequest.asString).thenReturn(httpResponse)
-    when(httpRequest.url).thenReturn(url)
-    when(httpResponse.isError).thenReturn(true)
-
-
-    val providers = service.loadProvidersFromRequest(httpRequest)
-    providers.size should be (1)
-    providers.head.providerName should equal("YouTube")
-  }
-
-  test("That loadProvidersFromRequest returns youtube as provider when unparseable data") {
-    val url = "http://ndla.no"
-    val httpRequest = mock[HttpRequest]
-    val httpResponse = mock[HttpResponse[String]]
-
-    when(httpRequest.asString).thenReturn(httpResponse)
-    when(httpRequest.url).thenReturn(url)
-    when(httpResponse.isError).thenReturn(false)
-    when(httpResponse.body).thenReturn("unparseable")
-
-
-    val providers = service.loadProvidersFromRequest(httpRequest)
+    val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
     providers.size should be (1)
     providers.head.providerName should equal("YouTube")
   }

@@ -8,9 +8,17 @@
 
 package no.ndla.oembedproxy
 
-import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderLoader}
+import no.ndla.network.NdlaClient
+import no.ndla.oembedproxy.controller.OEmbedProxyController
+import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 
 
-object ComponentRegistry extends OEmbedServiceComponent {
-  lazy val oEmbedService = new OEmbedService(ProviderLoader.loadProviders)
+object ComponentRegistry extends OEmbedProxyController with OEmbedServiceComponent with NdlaClient with ProviderService{
+  implicit val swagger = new OEmbedSwagger
+
+  lazy val providerService = new ProviderService
+  lazy val oEmbedService = new OEmbedService(providerService.loadProviders())
+  lazy val ndlaClient = new NdlaClient
+  lazy val oEmbedProxyController = new OEmbedProxyController
+  lazy val resourcesApp = new ResourcesApp
 }
