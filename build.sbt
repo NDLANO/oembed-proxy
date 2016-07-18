@@ -93,5 +93,3 @@ imageNames in docker := Seq(
     repository = name.value,
     tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
-
-credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
