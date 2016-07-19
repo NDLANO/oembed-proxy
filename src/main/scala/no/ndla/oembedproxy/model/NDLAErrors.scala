@@ -22,4 +22,3 @@ case class Error(code:Error.Value, description:String, occuredAt:String = new Si
 
 class ParameterMissingException(message: String) extends RuntimeException(message)
 class ProviderNotSupportedException(message: String) extends RuntimeException(message)
-class HttpRequestException(message: String) extends RuntimeException(message)

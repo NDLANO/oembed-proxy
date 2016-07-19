@@ -10,6 +10,7 @@ package no.ndla.oembedproxy.controller
 
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.ApplicationUrl
+import no.ndla.network.model.HttpRequestException
 import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.service.OEmbedServiceComponent
 import org.json4s.ext.EnumNameSerializer
@@ -17,6 +18,8 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.ScalatraServlet
 import org.scalatra.json.NativeJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
+
+import scala.util.{Failure, Success}
 
 trait OEmbedProxyController {
   this: OEmbedServiceComponent =>
@@ -42,6 +45,7 @@ trait OEmbedProxyController {
     before() {
       contentType = formats("json")
       ApplicationUrl.set(request)
+      logger.info("GET {}{}", request.getRequestURI, Option(request.getQueryString).map(s => s"?$s").getOrElse(""))
     }
 
     after() {
@@ -68,8 +72,10 @@ trait OEmbedProxyController {
       urlOpt match {
         case None => throw new ParameterMissingException("The required parameter 'url' is missing.")
         case Some(url) => {
-          logger.info(s"GET / with params url='$url', maxwidth='$maxWidth', maxheight='$maxHeight'")
-          oEmbedService.get(url, maxWidth, maxHeight)
+          oEmbedService.get(url, maxWidth, maxHeight) match {
+            case Success(oembed) => oembed
+            case Failure(ex) => throw ex
+          }
         }
       }
     }

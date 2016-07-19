@@ -11,9 +11,6 @@ package no.ndla.oembedproxy
 import org.scalatra.ScalatraServlet
 import org.scalatra.swagger.{ApiInfo, NativeSwaggerBase, Swagger}
 
-/**
- * Created by kes on 24/02/16.
- */
 class ResourcesApp(implicit val swagger: Swagger) extends ScalatraServlet with NativeSwaggerBase
 
 object OEmbedProxyInfo {
