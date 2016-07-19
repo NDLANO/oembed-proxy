@@ -1,86 +1,59 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 package no.ndla.oembedproxy.service
 
-import no.ndla.oembedproxy.model.{HttpRequestException, ProviderNotSupportedException, OEmbedEndpoint, OEmbedProvider}
+import no.ndla.network.model.HttpRequestException
+import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
+import org.mockito.Matchers._
 import org.mockito.Mockito._
-import scalaj.http.{HttpResponse, HttpRequest}
+import org.scalatest.TryValues._
+
+import scala.util.{Failure, Success}
+import scalaj.http.HttpRequest
 
 class OEmbedServiceTest extends UnitSuite with TestEnvironment {
-
   val ndlaProvider = OEmbedProvider("ndla", "http://ndla.no", List(OEmbedEndpoint(None, Some("http://ndla.no/services/oembed"), None, None)))
   val youtubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), Some(true), None)))
-  val providers = List(ndlaProvider, youtubeProvider)
 
-  val validOembedJson =
-    """
-      |{
-      |  "type": "rich",
-      |  "version": "1.0",
-      |  "title": "A Confectioner in the UK",
-      |  "providerName": "NDLA - Nasjonal digital læringsarena",
-      |  "providerUrl": "http://ndla.no/",
-      |  "width": 700,
-      |  "height": 800,
-      |  "html": "<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>"
-      |}
-    """.stripMargin
+  val OEmbedResponse = OEmbed("rich",
+    "1.0",
+    Some("A Confectioner in the UK"),
+    None, None, None,
+    Some("NDLA - Nasjonal digital læringsarene"),
+    Some("http://ndla.no"),
+    None, None, None, None, None, None, None,
+    Some("<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>"))
 
-  var service: OEmbedService = _
-
-  override def beforeEach() = {
-    service = new OEmbedService(providers)
-  }
+  override val oEmbedService = new OEmbedService(List(ndlaProvider, youtubeProvider))
 
   test("That get throws ProviderNotSupportedException when no providers support the url") {
     assertResult("Could not find an oembed-provider for the url 'ABC'") {
       intercept[ProviderNotSupportedException]{
-        service.get(url = "ABC", None, None)
+        oEmbedService.get(url = "ABC", None, None)
       }.getMessage
     }
   }
 
-  test("That get throws HttpRequestException when receiving http error") {
-    val request = mock[HttpRequest]
-    val response = mock[HttpResponse[String]]
-
-    when(request.asString).thenReturn(response)
-    when(request.url).thenReturn("ABC")
-
-    when(response.isError).thenReturn(true)
-    when(response.code).thenReturn(123)
-    when(response.statusLine).thenReturn("Ugyldig")
-
-    assertResult("Got 123 Ugyldig when calling ABC"){
-      intercept[HttpRequestException]{service.get(request)}.getMessage
-    }
+  test("That get returns a failure with HttpRequestException when receiving http error") {
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest], any[Option[String]], any[Option[String]])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
+    val oembedTry = oEmbedService.get("http://www.youtube.com/abc", None, None)
+    oembedTry should be a 'failure
+    oembedTry.failure.exception.getMessage should equal ("An error occured")
   }
 
-  test("That get throws HttpRequestException when unable to parse result") {
-    val request = mock[HttpRequest]
-    val response = mock[HttpResponse[String]]
-
-    when(request.asString).thenReturn(response)
-    when(request.url).thenReturn("ABC")
-
-    when(response.isError).thenReturn(false)
-    when(response.body).thenReturn("This cannot be parsed as json")
-
-    assertResult("Unreadable response from ABC"){
-      intercept[HttpRequestException]{service.get(request)}.getMessage
-    }
-  }
-
-  test("That get returns an oEmbed result when able to parse correctly") {
-    val request = mock[HttpRequest]
-    val response = mock[HttpResponse[String]]
-
-    when(request.asString).thenReturn(response)
-    when(response.isError).thenReturn(false)
-    when(response.body).thenReturn(validOembedJson)
-
-    val oembed = service.get(request)
-    oembed.`type` should equal("rich")
-    oembed.title.getOrElse("") should equal("A Confectioner in the UK")
+  test("That get returns a Success with an oEmbed when http call is successful") {
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest], any[Option[String]], any[Option[String]])(any[Manifest[OEmbed]])).thenReturn(Success(OEmbedResponse))
+    val oembedTry = oEmbedService.get("http://ndla.no/abc", None, None)
+    oembedTry should be a 'success
+    oembedTry.get.`type` should equal ("rich")
+    oembedTry.get.title.getOrElse("") should equal ("A Confectioner in the UK")
   }
 
 }

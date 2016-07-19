@@ -1,14 +1,27 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 package no.ndla.oembedproxy
 
-import no.ndla.oembedproxy.service.OEmbedServiceComponent
+import no.ndla.network.NdlaClient
+import no.ndla.oembedproxy.controller.OEmbedProxyController
+import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar
 
 
-trait TestEnvironment extends OEmbedServiceComponent with MockitoSugar {
+trait TestEnvironment extends OEmbedProxyController with OEmbedServiceComponent with NdlaClient with ProviderService with MockitoSugar {
   val oEmbedService = mock[OEmbedService]
+  val oEmbedProxyController = mock[OEmbedProxyController]
+  val ndlaClient = mock[NdlaClient]
+  val providerService = mock[ProviderService]
 
   def resetMocks() = {
-    Mockito.reset(oEmbedService)
+    Mockito.reset(oEmbedService, oEmbedProxyController, ndlaClient, providerService)
   }
 }

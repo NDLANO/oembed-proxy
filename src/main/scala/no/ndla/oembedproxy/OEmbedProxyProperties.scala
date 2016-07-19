@@ -1,3 +1,11 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 package no.ndla.oembedproxy
 
 import com.typesafe.scalalogging.LazyLogging
@@ -11,6 +19,9 @@ object OEmbedProxyProperties extends LazyLogging {
   val ApplicationPort = 80
   val JSonProviderUrl = "http://oembed.com/providers.json"
   val NdlaOembedServiceUrl = "http://ndla.no/services/oembed"
+
+  val CorrelationIdKey = "correlationID"
+  val CorrelationIdHeader = "X-Correlation-ID"
 
   lazy val ContactEmail = get("CONTACT_EMAIL")
   lazy val HostAddr = get("HOST_ADDR")

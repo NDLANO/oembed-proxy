@@ -1,3 +1,11 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 package no.ndla.oembedproxy.model
 
 import java.text.SimpleDateFormat
@@ -14,4 +22,3 @@ case class Error(code:Error.Value, description:String, occuredAt:String = new Si
 
 class ParameterMissingException(message: String) extends RuntimeException(message)
 class ProviderNotSupportedException(message: String) extends RuntimeException(message)
-class HttpRequestException(message: String) extends RuntimeException(message)

@@ -1,7 +1,18 @@
+/*
+ * Part of NDLA oembed_proxy.
+ * Copyright (C) 2016 NDLA
+ *
+ * See LICENSE
+ *
+ */
+
 import java.util.Properties
 
-val Scalaversion = "2.11.6"
-val Scalatraversion = "2.3.1"
+val Scalaversion = "2.11.8"
+val Scalatraversion = "2.4.1"
+val ScalaLoggingVersion = "3.1.0"
+val Log4JVersion = "2.6"
+val JacksonVersion = "2.7.4"
 val Jettyversion = "9.2.10.v20150310"
 val AwsSdkversion = "1.10.26"
 val ScalaTestVersion = "2.2.6"
@@ -28,15 +39,19 @@ lazy val oembed_proxy = (project in file(".")).
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     scalacOptions := Seq("-target:jvm-1.7"),
     libraryDependencies ++= Seq(
-      "ndla" %% "logging" % "0.1-SNAPSHOT",
-      "ndla" %% "logging" % "0.1-SNAPSHOT" % "test" classifier "tests",
-      "ndla" %% "network" % "0.1-SNAPSHOT",
+      "ndla" %% "network" % "0.3-SNAPSHOT",
+      "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
+      "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
+      "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % Log4JVersion,
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "org.scalatra" %% "scalatra" % Scalatraversion,
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
-      "org.json4s"   %% "json4s-native" % "3.2.11",
+      "org.json4s"   %% "json4s-native" % "3.3.0",
       "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "1.1.5",
       "com.netaporter" %% "scala-uri" % "0.4.12",
@@ -78,18 +93,3 @@ imageNames in docker := Seq(
     repository = name.value,
     tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
-
-publishTo := {
-  val nexus = "https://nexus.knowit.no/nexus/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/ndla-snapshots")
-  else
-    Some("releases"  at nexus + "content/repositories/ndla-releases")
-}
-
-resolvers ++= Seq(
-  "Snapshot Sonatype Nexus Repository Manager" at "https://nexus.knowit.no/nexus/content/repositories/ndla-snapshots",
-  "Release Sonatype Nexus Repository Manager" at "https://nexus.knowit.no/nexus/content/repositories/ndla-releases"
-)
-
-credentials += Credentials("Sonatype Nexus Repository Manager", "nexus.knowit.no", "ndla", "1814Ndla")
