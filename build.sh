@@ -1,8 +1,4 @@
 #!/bin/bash
-# Part of NDLA oembed_proxy.
-# Copyright (C) 2016 NDLA
-#
-# See LICENSE
 
 VERSION="$1"
 source ./build.properties

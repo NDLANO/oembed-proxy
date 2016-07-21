@@ -1,11 +1,3 @@
-/*
- * Part of NDLA oembed_proxy.
- * Copyright (C) 2016 NDLA
- *
- * See LICENSE
- *
- */
-
 import java.util.Properties
 
 val Scalaversion = "2.11.8"
@@ -39,7 +31,7 @@ lazy val oembed_proxy = (project in file(".")).
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     scalacOptions := Seq("-target:jvm-1.7"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.3-SNAPSHOT",
+      "ndla" %% "network" % "0.4",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
