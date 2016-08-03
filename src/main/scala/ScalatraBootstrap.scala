@@ -8,13 +8,14 @@
 
 import javax.servlet.ServletContext
 
-import no.ndla.oembedproxy.ComponentRegistry
+import no.ndla.oembedproxy.{ComponentRegistry, OEmbedProxyProperties}
 import org.scalatra.LifeCycle
 
 class ScalatraBootstrap extends LifeCycle{
 
   override def init(context: ServletContext) {
-    context.mount(ComponentRegistry.oEmbedProxyController, "/oembed")
-    context.mount(ComponentRegistry.resourcesApp, "/api-docs")
+    context.mount(ComponentRegistry.oEmbedProxyController, OEmbedProxyProperties.OembedProxyControllerMountPoint)
+    context.mount(ComponentRegistry.resourcesApp, OEmbedProxyProperties.ResourcesAppMountPoint)
+    context.mount(ComponentRegistry.healthController, OEmbedProxyProperties.HealthControllerMountPoint)
   }
 }
