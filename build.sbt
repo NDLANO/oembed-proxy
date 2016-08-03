@@ -39,6 +39,7 @@ lazy val oembed_proxy = (project in file(".")).
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "org.scalatra" %% "scalatra" % Scalatraversion,
+      "org.scalatra" %% "scalatra-scalatest" % Scalatraversion % "test",
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
