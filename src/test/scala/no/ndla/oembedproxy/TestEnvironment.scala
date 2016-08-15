@@ -9,17 +9,25 @@
 package no.ndla.oembedproxy
 
 import no.ndla.network.NdlaClient
-import no.ndla.oembedproxy.controller.OEmbedProxyController
+import no.ndla.oembedproxy.controller.{HealthController, OEmbedProxyController}
 import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar
 
 
-trait TestEnvironment extends OEmbedProxyController with OEmbedServiceComponent with NdlaClient with ProviderService with MockitoSugar {
+trait TestEnvironment
+  extends OEmbedProxyController
+  with OEmbedServiceComponent
+  with NdlaClient
+  with ProviderService
+  with MockitoSugar
+  with HealthController
+{
   val oEmbedService = mock[OEmbedService]
   val oEmbedProxyController = mock[OEmbedProxyController]
   val ndlaClient = mock[NdlaClient]
   val providerService = mock[ProviderService]
+  val healthController = mock[HealthController]
 
   def resetMocks() = {
     Mockito.reset(oEmbedService, oEmbedProxyController, ndlaClient, providerService)
