@@ -28,8 +28,8 @@ lazy val oembed_proxy = (project in file(".")).
   settings(commonSettings: _*).
   settings(
     name := "oembed-proxy",
-    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
-    scalacOptions := Seq("-target:jvm-1.7"),
+    javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
+    scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
       "ndla" %% "network" % "0.4",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
@@ -86,3 +86,5 @@ imageNames in docker := Seq(
     repository = name.value,
     tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
+
+resolvers ++= scala.util.Properties.envOrNone("NDLA_RELEASES").map(repo => "Release Sonatype Nexus Repository Manager" at repo).toSeq
