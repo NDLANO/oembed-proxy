@@ -27,18 +27,20 @@ trait ProviderService {
     val goOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List("oembed=true"))
     val goOpenProvider = OEmbedProvider("GoOpen.no", "http://www.goopen.no", goOpenEndpoint :: Nil)
 
-    val ndlaApprovedUrls = List(
-      "http://ndla.no/*/node/*", "https://ndla.no/*/node/*",
-      "http://ndla.no/node/*", "https://ndla.no/node/*")
-    val ndlaEndpoint = OEmbedEndpoint(Some(ndlaApprovedUrls), Some(OEmbedProxyProperties.NdlaOembedServiceUrl), None, None)
-    val ndlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(ndlaEndpoint), url => url.removeAllParams())
+    val httpNdlaApprovedUrls = List("http://ndla.no/*/node/*", "http://ndla.no/node/*")
+    val httpNdlaEndpoint = OEmbedEndpoint(Some(httpNdlaApprovedUrls), Some(OEmbedProxyProperties.HttpNdlaOembedServiceUrl), None, None)
+    val httpNdlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(httpNdlaEndpoint), url => url.removeAllParams())
+
+    val httpsNdlaApprovedUrls = List("https://ndla.no/*/node/*", "https://ndla.no/node/*")
+    val httpsNdlaEndpoint = OEmbedEndpoint(Some(httpsNdlaApprovedUrls), Some(OEmbedProxyProperties.HttpsNdlaOembedServiceUrl), None, None)
+    val httpsNdlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(httpsNdlaEndpoint), url => url.removeAllParams())
 
     val youtubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
     val youTubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(youtubeEndpoint))
     val youtuProvider = OEmbedProvider("YouTube", "http://youtu.be", List(youtubeEndpoint))
 
     def loadProviders(): List[OEmbedProvider] = {
-      ndlaProvider :: youtuProvider :: goOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
+      httpNdlaProvider :: httpsNdlaProvider :: youtuProvider :: goOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
