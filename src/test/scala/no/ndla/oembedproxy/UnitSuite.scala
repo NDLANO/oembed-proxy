@@ -19,8 +19,9 @@ abstract class UnitSuite extends FunSuite with Matchers with OptionValues with I
     "JSON_PROVIDERS_URL" -> Some("http://some-url"),
     "HTTP_NDLA_OEMBED_SERVICE_URL" -> Some("http://some-other-url"),
     "HTTPS_NDLA_OEMBED_SERVICE_URL" -> Some("https://some-other-url"),
-    "NDLA_STAGING_OEMBED_SERVICE_URL" -> Some("http://some-other-url"),
-    "NDLA_TEST_OEMBED_SERVICE_URL" -> Some("http://some-other-url"),
+    "NDLA_API_OEMBED_SERVICE_URL" -> Some("http://some-other-url"),
+    "NDLA_API_OEMBED_PROVIDER" -> Some("http://some-other-url"),
+    "NDLA_API_APPROVED_URL" -> Some("http://some-other-url"),
     "NDLACOMPONENT" -> Some("oembed-proxy")
   ))
 }

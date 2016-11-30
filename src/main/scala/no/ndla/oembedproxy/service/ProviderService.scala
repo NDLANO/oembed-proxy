@@ -42,16 +42,12 @@ trait ProviderService {
     val H5PEndpoint = OEmbedEndpoint(None, Some("https://ndlah5p.joubel.com/h5p-oembed.json"), None, None)
     val H5PProvider = OEmbedProvider("ndlah5p.joubel.com", "https://ndlah5p.joubel.com", List(H5PEndpoint))
 
-    val NdlaStagingApprovedUrls = List("http://api.staging.ndla.no:8082/article/*")
-    val NdlaStagingEndpoint = OEmbedEndpoint(Some(NdlaStagingApprovedUrls), Some(OEmbedProxyProperties.NdlaStagingOembedServiceUrl), None, None)
-    val NdlaStagingProvider = OEmbedProvider("api.staging.ndla.no", "http://api.staging.ndla.no", List(NdlaStagingEndpoint), url => url.removeAllParams())
-
-    val NdlaTestApprovedUrls = List("http://api.test.ndla.no:8082/article/*")
-    val NdlaTestEndpoint = OEmbedEndpoint(Some(NdlaTestApprovedUrls), Some(OEmbedProxyProperties.NdlaTestOembedServiceUrl), None, None)
-    val NdlaTestProvider = OEmbedProvider("api.test.ndla.no", "http://api.test.ndla.no", List(NdlaTestEndpoint), url => url.removeAllParams())
+    val NdlaApiApprovedUrls = List(OEmbedProxyProperties.NdlaApprovedUrl)
+    val NdlaApiEndpoint = OEmbedEndpoint(Some(NdlaApiApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
+    val NdlaApiProvider = OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), url => url.removeAllParams())
 
     def loadProviders(): List[OEmbedProvider] = {
-      NdlaTestProvider :: NdlaStagingProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
+      NdlaApiProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
