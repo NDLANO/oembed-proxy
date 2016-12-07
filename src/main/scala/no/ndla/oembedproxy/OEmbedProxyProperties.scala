@@ -26,7 +26,9 @@ object OEmbedProxyProperties extends LazyLogging {
   lazy val JSonProviderUrl = get("JSON_PROVIDERS_URL")
   lazy val HttpNdlaOembedServiceUrl = get("HTTP_NDLA_OEMBED_SERVICE_URL")
   lazy val HttpsNdlaOembedServiceUrl = get("HTTPS_NDLA_OEMBED_SERVICE_URL")
-
+  lazy val NdlaApiOembedServiceUrl = get("NDLA_API_OEMBED_SERVICE_URL")
+  lazy val NdlaApiOembedProvider = get("NDLA_API_OEMBED_PROVIDER")
+  lazy val NdlaApprovedUrl = get("NDLA_API_APPROVED_URL")
   val OembedProxyControllerMountPoint = "/oembed"
   val ResourcesAppMountPoint = "/api-docs"
   val HealthControllerMountPoint = "/health"

@@ -42,8 +42,12 @@ trait ProviderService {
     val H5PEndpoint = OEmbedEndpoint(None, Some("https://ndlah5p.joubel.com/h5p-oembed.json"), None, None)
     val H5PProvider = OEmbedProvider("ndlah5p.joubel.com", "https://ndlah5p.joubel.com", List(H5PEndpoint))
 
+    val NdlaApiApprovedUrls = List(OEmbedProxyProperties.NdlaApprovedUrl)
+    val NdlaApiEndpoint = OEmbedEndpoint(Some(NdlaApiApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
+    val NdlaApiProvider = OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), url => url.removeAllParams())
+
     def loadProviders(): List[OEmbedProvider] = {
-      H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
+      NdlaApiProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
