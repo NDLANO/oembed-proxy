@@ -17,7 +17,8 @@ object OEmbedProxyProperties {
 
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "http://oembed.com/providers.json"
-  val NdlaOembedServiceUrl = "http://ndla.no/services/oembed"
+  val HttpNdlaOembedServiceUrl = "http://ndla.no/services/oembed"
+  val HttpsNdlaOembedServiceUrl = "https://ndla.no/services/oembed"
 
   val OembedProxyControllerMountPoint = "/oembed"
   val ResourcesAppMountPoint = "/api-docs"
