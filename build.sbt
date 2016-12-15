@@ -1,7 +1,7 @@
 import java.util.Properties
 
 val Scalaversion = "2.11.8"
-val Scalatraversion = "2.4.1"
+val Scalatraversion = "2.5.0"
 val ScalaLoggingVersion = "3.1.0"
 val Log4JVersion = "2.6"
 val JacksonVersion = "2.7.4"
@@ -28,8 +28,8 @@ lazy val oembed_proxy = (project in file(".")).
   settings(commonSettings: _*).
   settings(
     name := "oembed-proxy",
-    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
-    scalacOptions := Seq("-target:jvm-1.7"),
+    javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
+    scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
       "ndla" %% "network" % "0.6",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
@@ -44,7 +44,7 @@ lazy val oembed_proxy = (project in file(".")).
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
-      "org.json4s"   %% "json4s-native" % "3.3.0",
+      "org.json4s"   %% "json4s-native" % "3.5.0",
       "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "1.1.5",
       "com.netaporter" %% "scala-uri" % "0.4.12",
