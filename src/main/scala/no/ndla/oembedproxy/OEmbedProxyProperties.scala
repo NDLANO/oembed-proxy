@@ -25,7 +25,7 @@ object OEmbedProxyProperties {
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = s"$Domain:8082/article/*"
 
-  val OembedProxyControllerMountPoint = "/oembed"
+  val OembedProxyControllerMountPoint = "/oembed-proxy/v1/oembed"
   val ResourcesAppMountPoint = "/api-docs"
   val HealthControllerMountPoint = "/health"
 
