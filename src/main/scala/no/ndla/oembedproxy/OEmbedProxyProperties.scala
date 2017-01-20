@@ -22,7 +22,7 @@ object OEmbedProxyProperties {
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "http://oembed.com/providers.json"
 
-  val NdlaApiOembedServiceUrl = s"$Domain/article-oembed"
+  val NdlaApiOembedServiceUrl = s"$Domain/article-converter"
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = s"$Domain:8082/article/*"
 
