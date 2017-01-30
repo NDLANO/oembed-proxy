@@ -25,7 +25,7 @@ object OEmbedProxyProperties {
   val NdlaApiOembedServiceUrl = s"$Domain/article-converter"
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = Map(
-    "local" -> "http://localhost:8082/article/*",
+    "local" -> "http://proxy.ndla-local:30017/article/*",
     "prod" -> "https://ndla-frontend.api.ndla.no/article/*"
   ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/article/*")
 
