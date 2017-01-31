@@ -27,7 +27,7 @@ object OEmbedProxyProperties {
   val NdlaApprovedUrl = Map(
     "local" -> "http://proxy.ndla-local:30017/article/*",
     "prod" -> "https://ndla-frontend.api.ndla.no/article/*"
-  ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/article/*")
+  ).getOrElse(Environment, s"https?://ndla-frontend.$Environment.api.ndla.no/article/*")
 
   val OembedProxyControllerMountPoint = "/oembed-proxy/v1/oembed"
   val ResourcesAppMountPoint = "/api-docs"
