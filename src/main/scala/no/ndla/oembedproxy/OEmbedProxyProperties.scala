@@ -22,7 +22,11 @@ object OEmbedProxyProperties {
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "http://oembed.com/providers.json"
 
-  val NdlaApiOembedServiceUrl = s"$Domain/oembed"
+  val NdlaApiOembedServiceUrl = Map(
+    "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
+    "prod" -> "https://ndla-frontend.api.ndla.no/oembed"
+  ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
+
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = Map(
     "local" -> "http://proxy.ndla-local:30017/article/*",
