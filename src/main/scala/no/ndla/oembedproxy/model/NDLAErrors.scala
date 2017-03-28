@@ -12,13 +12,23 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import no.ndla.oembedproxy.OEmbedProxyProperties
+import org.scalatra.swagger.annotations.{ApiModel, ApiModelProperty}
 
-object Error extends Enumeration{
-  val GENERIC, PARAMETER_MISSING, PROVIDER_NOT_SUPPORTED, REMOTE_ERROR = Value
+import scala.annotation.meta.field
+
+object Error {
+  val GENERIC = "GENERIC"
+  val PARAMETER_MISSING = "PARAMETER MISSING"
+  val PROVIDER_NOT_SUPPORTED = "PROVIDER NOT SUPPORTED"
+  val REMOTE_ERROR = "REMOTE ERROR"
   val GenericError = Error(GENERIC, s"Ooops. Something we didn't anticipate occured. We have logged the error, and will look into it. But feel free to contact ${OEmbedProxyProperties.ContactEmail} if the error persists.")
 }
 
-case class Error(code:Error.Value, description:String, occuredAt:String = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()))
+@ApiModel(description = "Information about errors")
+case class Error(
+  @(ApiModelProperty@field)(description = "Code stating the type of error") code: String,
+  @(ApiModelProperty@field)(description = "Description of the error") description: String,
+  @(ApiModelProperty@field)(description = "When the error occured") occuredAt: String = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()))
 
 class ParameterMissingException(message: String) extends RuntimeException(message)
 class ProviderNotSupportedException(message: String) extends RuntimeException(message)
