@@ -9,9 +9,13 @@
 package no.ndla.oembedproxy
 
 import org.scalatra.ScalatraServlet
-import org.scalatra.swagger.{ApiInfo, NativeSwaggerBase, Swagger}
+import org.scalatra.swagger._
 
-class ResourcesApp(implicit val swagger: Swagger) extends ScalatraServlet with NativeSwaggerBase
+class ResourcesApp(implicit val swagger: Swagger) extends ScalatraServlet with NativeSwaggerBase {
+  get("/") {
+    renderSwagger2(swagger.docs.toList)
+  }
+}
 
 object OEmbedProxyInfo {
   val apiInfo = ApiInfo(
@@ -23,4 +27,6 @@ object OEmbedProxyInfo {
     "http://www.gnu.org/licenses/gpl-3.0.en.html")
 }
 
-class OEmbedSwagger extends Swagger(Swagger.SpecVersion, "0.8", OEmbedProxyInfo.apiInfo)
+class OEmbedSwagger extends Swagger("2.0", "0.8", OEmbedProxyInfo.apiInfo){
+  addAuthorization(OAuth(List("oembed:all"), List(ApplicationGrant(TokenEndpoint("/auth/tokens", "access_token")))))
+}
