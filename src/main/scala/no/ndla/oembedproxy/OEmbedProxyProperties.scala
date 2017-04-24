@@ -34,7 +34,7 @@ object OEmbedProxyProperties {
   ).getOrElse(Environment, s"https?://ndla-frontend.$Environment.api.ndla.no/article/*")
 
   val OembedProxyControllerMountPoint = "/oembed-proxy/v1/oembed"
-  val ResourcesAppMountPoint = "/api-docs"
+  val ResourcesAppMountPoint = "/oembed-proxy/api-docs"
   val HealthControllerMountPoint = "/health"
 
 
