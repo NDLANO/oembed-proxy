@@ -1,21 +1,20 @@
-# oEmbed Proxy 
+# oEmbed Proxy
 [![Build Status](https://travis-ci.org/NDLANO/oembed-proxy.svg?branch=master)](https://travis-ci.org/NDLANO/oembed-proxy)
 
-Proxy for making oEmbed requests to known oEmbed providers
+## Usage
+Proxy for making oEmbed requests to known oEmbed providers without running into CORS problems.
+It implements the oEmbed specification as described at [oembed.com](http://oembed.com/).
 
-# Building and distribution
+It supports oEmbed from all providers listed on [oembed.com](http://oembed.com/#section7)
 
-## Compile
-    sbt compile
+To interact with the API, you need valid security credentials; see [Access Tokens usage](https://github.com/NDLANO/auth/blob/master/README.md).
 
-## Run tests
-    sbt test
+For a more detailed documentation of the API, please refer to the [API documentation](https://api.ndla.no) (Staging: [API documentation](https://staging.api.ndla.no)).
 
-## Package and run locally
-    ndla deploy local ndla/oembed-proxy
+## Developer documentation
 
-## Create Docker Image
-    ./build.sh
-        
+**Compile:** sbt compile
 
+**Run tests:** sbt test
 
+**Create Docker Image:** ./build.sh
