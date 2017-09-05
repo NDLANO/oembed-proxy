@@ -42,14 +42,14 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That get returns a failure with HttpRequestException when receiving http error") {
-    when(ndlaClient.fetch[OEmbed](any[HttpRequest], any[Option[String]], any[Option[String]])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
     val oembedTry = oEmbedService.get("http://www.youtube.com/abc", None, None)
     oembedTry should be a 'failure
     oembedTry.failure.exception.getMessage should equal ("An error occured")
   }
 
   test("That get returns a Success with an oEmbed when http call is successful") {
-    when(ndlaClient.fetch[OEmbed](any[HttpRequest], any[Option[String]], any[Option[String]])(any[Manifest[OEmbed]])).thenReturn(Success(OEmbedResponse))
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Success(OEmbedResponse))
     val oembedTry = oEmbedService.get("http://ndla.no/abc", None, None)
     oembedTry should be a 'success
     oembedTry.get.`type` should equal ("rich")
