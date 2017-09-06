@@ -26,7 +26,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest does not return an incomplete provider") {
     when(ndlaClient.fetch[List[OEmbedProvider]]
-        (any[HttpRequest], any[Option[String]], any[Option[String]])
+        (any[HttpRequest])
         (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(IncompleteProvider)))
 
@@ -36,7 +36,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest works for a single provider") {
     when(ndlaClient.fetch[List[OEmbedProvider]]
-      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[HttpRequest])
       (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(CompleteProvider)))
 
@@ -46,7 +46,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest only returns the complete provider") {
     when(ndlaClient.fetch[List[OEmbedProvider]]
-      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[HttpRequest])
       (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(IncompleteProvider, CompleteProvider)))
 
@@ -56,7 +56,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest returns youtube as provider when http-error") {
     when(ndlaClient.fetch[List[OEmbedProvider]]
-      (any[HttpRequest], any[Option[String]], any[Option[String]])
+      (any[HttpRequest])
       (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Failure(new HttpRequestException("En feil oppstod")))
 

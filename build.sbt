@@ -1,13 +1,12 @@
 import java.util.Properties
 
-val Scalaversion = "2.11.8"
+val Scalaversion = "2.12.2"
 val Scalatraversion = "2.5.1-NDLA-3"
-val ScalaLoggingVersion = "3.1.0"
-val Log4JVersion = "2.6"
+val ScalaLoggingVersion = "3.5.0"
+val Log4JVersion = "2.7"
 val JacksonVersion = "2.7.4"
 val Jettyversion = "9.2.10.v20150310"
-val AwsSdkversion = "1.10.26"
-val ScalaTestVersion = "2.2.6"
+val ScalaTestVersion = "3.0.1"
 val MockitoVersion = "1.10.19"
 
 val appProperties = settingKey[Properties]("The application properties")
@@ -31,24 +30,24 @@ lazy val oembed_proxy = (project in file(".")).
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.8",
+      "ndla" %% "network" % "0.22",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-slf4j-impl" % Log4JVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "org.scalatra" %% "scalatra" % Scalatraversion,
       "org.scalatra" %% "scalatra-scalatest" % Scalatraversion % "test",
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s"   %% "json4s-native" % "3.5.0",
       "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
-      "org.scalaj" %% "scalaj-http" % "1.1.5",
-      "com.netaporter" %% "scala-uri" % "0.4.12",
-      "org.scalatest" % "scalatest_2.11" % ScalaTestVersion % "test",
+      "org.scalaj" %% "scalaj-http" % "2.3.0",
+      "com.netaporter" %% "scala-uri" % "0.4.16",
+      "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test")
   ).enablePlugins(DockerPlugin).enablePlugins(GitVersioning).enablePlugins(JettyPlugin)
 
