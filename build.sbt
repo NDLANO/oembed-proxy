@@ -1,7 +1,7 @@
 import java.util.Properties
 
 val Scalaversion = "2.12.2"
-val Scalatraversion = "2.5.1-NDLA-3"
+val Scalatraversion = "2.5.1"
 val ScalaLoggingVersion = "3.5.0"
 val Log4JVersion = "2.7"
 val JacksonVersion = "2.7.4"
