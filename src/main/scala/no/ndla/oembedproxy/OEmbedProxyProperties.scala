@@ -20,7 +20,7 @@ object OEmbedProxyProperties {
   val Environment = propOrElse("NDLA_ENVIRONMENT", "local")
 
   val ContactEmail = "christergundersen@ndla.no"
-  val JSonProviderUrl = "http://oembed.com/providers.json"
+  val JSonProviderUrl = "https://oembed.com/providers.json"
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
