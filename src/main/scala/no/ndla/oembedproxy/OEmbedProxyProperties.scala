@@ -21,6 +21,7 @@ object OEmbedProxyProperties {
 
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "https://oembed.com/providers.json"
+  val ProviderListCacheAgeInMs: Long = 1000 * 60 * 60 * 24 // 24 hour caching
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",

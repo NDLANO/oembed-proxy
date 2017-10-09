@@ -12,6 +12,7 @@ import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.OEmbedProxyProperties
+import no.ndla.oembedproxy.cache.MemoizeAutoRenew
 import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider}
 
 import scala.util.{Failure, Success}
@@ -50,7 +51,11 @@ trait ProviderService {
     val TedEndpoint = OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/talks/oembed.json"), None, None)
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), url => url.removeAllParams())
 
-    def loadProviders(): List[OEmbedProvider] = {
+    val loadProviders = MemoizeAutoRenew(() => {
+      _loadProviders()
+    })
+
+    private def _loadProviders(): List[OEmbedProvider] = {
       NdlaApiProvider :: TedProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 

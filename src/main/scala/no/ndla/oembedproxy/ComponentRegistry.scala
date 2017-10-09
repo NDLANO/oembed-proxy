@@ -23,7 +23,7 @@ object ComponentRegistry
   implicit val swagger = new OEmbedSwagger
 
   lazy val providerService = new ProviderService
-  lazy val oEmbedService = new OEmbedService(providerService.loadProviders())
+  lazy val oEmbedService = new OEmbedService
   lazy val ndlaClient = new NdlaClient
   lazy val oEmbedProxyController = new OEmbedProxyController
   lazy val resourcesApp = new ResourcesApp
