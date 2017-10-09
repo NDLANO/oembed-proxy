@@ -8,8 +8,6 @@
 
 package no.ndla.oembedproxy.service
 
-import java.util.Calendar
-
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
@@ -53,7 +51,7 @@ trait ProviderService {
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), url => url.removeAllParams())
 
     val loadProviders = Memoize(() => {
-      logger.info("Cache was not found or out of date, fetching providers")
+      logger.info("Provider cache was not found or out of date, fetching providers")
       _loadProviders()
     })
 
