@@ -12,10 +12,19 @@ import com.typesafe.scalalogging.LazyLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.{DefaultServlet, ServletContextHandler}
 import org.scalatra.servlet.ScalatraListener
+import no.ndla.oembedproxy.model.ProviderListNotFetchedException
 
 import scala.io.Source
 
 object JettyLauncher extends LazyLogging {
+  def fetchProviderList = {
+    try {
+      ComponentRegistry.providerService.loadProviders()
+    } catch {
+      case plnf: ProviderListNotFetchedException => throw new RuntimeException("hello")
+    }
+  }
+
   def main(args: Array[String]) {
     logger.info(Source.fromInputStream(getClass.getResourceAsStream("/log-license.txt")).mkString)
 
@@ -34,6 +43,8 @@ object JettyLauncher extends LazyLogging {
 
     val startTime = System.currentTimeMillis - startMillis
     logger.info(s"Started at port $port in $startTime ms.")
+
+    fetchProviderList
 
     server.join()
   }

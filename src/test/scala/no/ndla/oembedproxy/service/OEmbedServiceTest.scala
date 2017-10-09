@@ -31,7 +31,7 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
     None, None, None, None, None, None, None,
     Some("<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>"))
 
-  override val oEmbedService = new OEmbedService(List(ndlaProvider, youtubeProvider))
+  override val oEmbedService = new OEmbedService(Some(List(ndlaProvider, youtubeProvider)))
 
   test("That get throws ProviderNotSupportedException when no providers support the url") {
     assertResult("Could not find an oembed-provider for the url 'ABC'") {

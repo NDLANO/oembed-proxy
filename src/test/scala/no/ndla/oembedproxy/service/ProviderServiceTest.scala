@@ -53,16 +53,4 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
     val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
     providers.size should be(1)
   }
-
-  test("That loadProvidersFromRequest returns youtube as provider when http-error") {
-    when(ndlaClient.fetch[List[OEmbedProvider]]
-      (any[HttpRequest])
-      (any[Manifest[List[OEmbedProvider]]])
-    ).thenReturn(Failure(new HttpRequestException("En feil oppstod")))
-
-    val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
-    providers.size should be (1)
-    providers.head.providerName should equal("YouTube")
-  }
-
 }

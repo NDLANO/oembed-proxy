@@ -8,12 +8,14 @@
 
 package no.ndla.oembedproxy.service
 
+import java.util.Calendar
+
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.OEmbedProxyProperties
-import no.ndla.oembedproxy.cache.MemoizeAutoRenew
-import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider}
+import no.ndla.oembedproxy.cache.Memoize
+import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
 
 import scala.util.{Failure, Success}
 import scalaj.http.{Http, HttpRequest}
@@ -37,7 +39,6 @@ trait ProviderService {
     val HttpsNdlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(HttpsNdlaEndpoint), url => url.removeAllParams())
 
     val YoutubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
-    val YouTubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(YoutubeEndpoint))
     val YoutuProvider = OEmbedProvider("YouTube", "http://youtu.be", List(YoutubeEndpoint))
 
     val H5PEndpoint = OEmbedEndpoint(None, Some("https://ndlah5p.joubel.com/h5p-oembed.json"), None, None)
@@ -51,7 +52,8 @@ trait ProviderService {
     val TedEndpoint = OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/talks/oembed.json"), None, None)
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), url => url.removeAllParams())
 
-    val loadProviders = MemoizeAutoRenew(() => {
+    val loadProviders = Memoize(() => {
+      logger.info("Cache was not found or out of date, fetching providers")
       _loadProviders()
     })
 
@@ -66,7 +68,7 @@ trait ProviderService {
         case Success(providers) => providers.filter(_.endpoints.nonEmpty).filter(_.endpoints.forall(endpoint => endpoint.url.isDefined))
         case Failure(ex) => {
           logger.warn(ex.getMessage)
-          List(YouTubeProvider)
+          throw new ProviderListNotFetchedException(ex.getMessage)
         }
       }
     }
