@@ -10,7 +10,7 @@ package no.ndla.oembedproxy.service
 
 import no.ndla.network.model.HttpRequestException
 import no.ndla.oembedproxy.model.{OEmbed, OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
-import no.ndla.oembedproxy.{OEmbedProxyProperties, TestEnvironment, UnitSuite}
+import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 
