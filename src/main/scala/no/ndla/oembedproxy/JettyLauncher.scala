@@ -12,17 +12,12 @@ import com.typesafe.scalalogging.LazyLogging
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.{DefaultServlet, ServletContextHandler}
 import org.scalatra.servlet.ScalatraListener
-import no.ndla.oembedproxy.model.ProviderListNotFetchedException
 
 import scala.io.Source
 
 object JettyLauncher extends LazyLogging {
   def fetchProviderList = {
-    try {
-      ComponentRegistry.providerService.loadProviders()
-    } catch {
-      case plnf: ProviderListNotFetchedException => throw new RuntimeException("hello")
-    }
+    ComponentRegistry.providerService.loadProviders()
   }
 
   def main(args: Array[String]) {

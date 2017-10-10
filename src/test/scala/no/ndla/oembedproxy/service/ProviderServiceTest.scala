@@ -9,13 +9,13 @@
 package no.ndla.oembedproxy.service
 
 import no.ndla.network.model.HttpRequestException
-import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider}
-import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
+import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
+import no.ndla.oembedproxy.{OEmbedProxyProperties, TestEnvironment, UnitSuite}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 
 import scala.util.{Failure, Success}
-import scalaj.http.HttpRequest
+import scalaj.http.{Http, HttpRequest}
 
 class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
@@ -23,6 +23,14 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   val CompleteProvider = OEmbedProvider("IFTTT", "http://www.ifttt.com", List(OEmbedEndpoint(Some(List("http://ifttt.com/recipes/*")), Some("http://www.ifttt.com/oembed/"), Some(true), None)))
 
   override val providerService = new ProviderService
+
+
+  test("That loadProvidersFromRequest fails on invalid url/bad response") {
+    val invalidUrl = "invalidUrl123"
+    intercept[ProviderListNotFetchedException]{
+      providerService.loadProvidersFromRequest(Http(invalidUrl))
+    }
+  }
 
   test("That loadProvidersFromRequest does not return an incomplete provider") {
     when(ndlaClient.fetch[List[OEmbedProvider]]
