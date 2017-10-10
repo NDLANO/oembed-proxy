@@ -60,7 +60,7 @@ trait ProviderService {
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
-      val providersTry = ndlaClient.fetch[List[OEmbedProvider]](request) //TODO: Hvorfor blir denne null nå istedet for Failure
+      val providersTry = ndlaClient.fetch[List[OEmbedProvider]](request)
       providersTry match {
         // Only keep providers with at least one endpoint with at least one url
         case Success(providers) => providers.filter(_.endpoints.nonEmpty).filter(_.endpoints.forall(endpoint => endpoint.url.isDefined))
@@ -68,7 +68,6 @@ trait ProviderService {
           logger.warn(ex.getMessage)
           throw new ProviderListNotFetchedException(ex.getMessage)
         }
-        case _ => throw new ProviderListNotFetchedException("Could not fetch list of providers")
       }
     }
   }

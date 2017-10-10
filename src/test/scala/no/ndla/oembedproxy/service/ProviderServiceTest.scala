@@ -9,7 +9,7 @@
 package no.ndla.oembedproxy.service
 
 import no.ndla.network.model.HttpRequestException
-import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
+import no.ndla.oembedproxy.model.{OEmbed, OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
 import no.ndla.oembedproxy.{OEmbedProxyProperties, TestEnvironment, UnitSuite}
 import org.mockito.Matchers.{eq => eqTo, _}
 import org.mockito.Mockito._
@@ -27,6 +27,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest fails on invalid url/bad response") {
     val invalidUrl = "invalidUrl123"
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
     intercept[ProviderListNotFetchedException]{
       providerService.loadProvidersFromRequest(Http(invalidUrl))
     }
