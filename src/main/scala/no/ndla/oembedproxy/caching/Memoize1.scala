@@ -7,7 +7,7 @@
  */
 
 
-package no.ndla.oembedproxy.cache
+package no.ndla.oembedproxy.caching
 
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 import no.ndla.oembedproxy.OEmbedProxyProperties.ProviderListCacheAgeInMs

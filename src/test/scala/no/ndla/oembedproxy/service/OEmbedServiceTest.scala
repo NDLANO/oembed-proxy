@@ -9,7 +9,7 @@
 package no.ndla.oembedproxy.service
 
 import no.ndla.network.model.HttpRequestException
-import no.ndla.oembedproxy.cache.Memoize
+import no.ndla.oembedproxy.caching.Memoize
 import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
 import org.mockito.Matchers._

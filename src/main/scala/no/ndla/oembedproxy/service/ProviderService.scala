@@ -12,7 +12,7 @@ import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.OEmbedProxyProperties
-import no.ndla.oembedproxy.cache.Memoize
+import no.ndla.oembedproxy.caching.Memoize
 import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
 
 import scala.util.{Failure, Success}
