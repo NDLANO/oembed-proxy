@@ -13,7 +13,7 @@ import scala.util.Properties.envOrNone
 
 
 object OEmbedProxyProperties {
-  val ApplicationPort = 80
+  val ApplicationPort = propOrElse("APPLICATION_PORT", "80").toInt
 
   val CorrelationIdKey = "correlationID"
   val CorrelationIdHeader = "X-Correlation-ID"
