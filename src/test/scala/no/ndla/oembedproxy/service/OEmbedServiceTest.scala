@@ -9,6 +9,7 @@
 package no.ndla.oembedproxy.service
 
 import no.ndla.network.model.HttpRequestException
+import no.ndla.oembedproxy.cache.Memoize
 import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
 import org.mockito.Matchers._
@@ -32,6 +33,10 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
     Some("<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>"))
 
   override val oEmbedService = new OEmbedService(Some(List(ndlaProvider, youtubeProvider)))
+  val providerMemoize = new Memoize(0, ()=>List[OEmbedProvider](), false)
+  override val providerService = new ProviderService {
+    override val loadProviders = providerMemoize
+  }
 
   test("That get throws ProviderNotSupportedException when no providers support the url") {
     assertResult("Could not find an oembed-provider for the url 'ABC'") {

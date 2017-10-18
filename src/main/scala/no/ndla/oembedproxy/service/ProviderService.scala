@@ -55,7 +55,7 @@ trait ProviderService {
       _loadProviders()
     })
 
-    private def _loadProviders(): List[OEmbedProvider] = {
+    def _loadProviders(): List[OEmbedProvider] = {
       NdlaApiProvider :: TedProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutuProvider :: GoOpenProvider :: loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 

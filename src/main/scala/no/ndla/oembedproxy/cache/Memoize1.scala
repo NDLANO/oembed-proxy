@@ -1,6 +1,6 @@
 /*
  * Part of NDLA article_api.
- * Copyright (C) 2016 NDLA
+ * Copyright (C) 2017 NDLA
  *
  * See LICENSE
  *
