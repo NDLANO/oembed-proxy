@@ -32,14 +32,14 @@ object JettyLauncher extends LazyLogging {
     servletContext.addServlet(classOf[DefaultServlet], "/")
     servletContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false")
 
+    fetchProviderList
+
     val server = new Server(port)
     server.setHandler(servletContext)
     server.start()
 
     val startTime = System.currentTimeMillis - startMillis
     logger.info(s"Started at port $port in $startTime ms.")
-
-    fetchProviderList
 
     server.join()
   }

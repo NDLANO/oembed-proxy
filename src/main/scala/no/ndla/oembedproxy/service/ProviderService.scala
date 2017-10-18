@@ -60,12 +60,6 @@ trait ProviderService {
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
-      import java.nio.file.{Paths, Files}
-      if (Files.exists(Paths.get("/tmp/nowork"))){
-        logger.error(s"Failed to load providers from ${request.url}.")
-        throw new DoNotUpdateMemoizeException("HTTPREQUESTERROR SOMETHING SOMETHING EXAMPLE")
-      }
-
       val providersTry = ndlaClient.fetch[List[OEmbedProvider]](request)
       providersTry match {
         // Only keep providers with at least one endpoint with at least one url
