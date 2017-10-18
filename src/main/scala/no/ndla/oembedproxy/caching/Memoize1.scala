@@ -10,9 +10,13 @@
 package no.ndla.oembedproxy.caching
 
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
-import no.ndla.oembedproxy.OEmbedProxyProperties.ProviderListCacheAgeInMs
 
-class Memoize[R](maxCacheAgeMs: Long, f: () => R, autoRefreshCache: Boolean) extends (() => R) {
+import com.typesafe.scalalogging.LazyLogging
+import no.ndla.oembedproxy.OEmbedProxyProperties.{ProviderListCacheAgeInMs, ProviderListRetryTimeInMs}
+import no.ndla.oembedproxy.model.DoNotUpdateMemoizeException
+
+class Memoize[R](maxCacheAgeMs: Long, f: () => R, autoRefreshCache: Boolean) extends (() => R) with LazyLogging {
+
   case class CacheValue(value: R, lastUpdated: Long) {
     def isExpired: Boolean = lastUpdated + maxCacheAgeMs <= System.currentTimeMillis()
   }
@@ -20,7 +24,14 @@ class Memoize[R](maxCacheAgeMs: Long, f: () => R, autoRefreshCache: Boolean) ext
   private[this] var cache :Option[CacheValue] = None
 
   private def renewCache = {
-    cache = Some(CacheValue(f(), System.currentTimeMillis()))
+    try {
+      cache = Some(CacheValue(f(), System.currentTimeMillis()))
+    } catch {
+      case mex: DoNotUpdateMemoizeException =>
+        val retryTime = System.currentTimeMillis() - maxCacheAgeMs + ProviderListRetryTimeInMs
+        cache = Some(CacheValue(cache.get.value, retryTime))
+        logger.warn(s"Caught ${mex.getClass.getName}, with message: '${mex.getMessage}', will not update cached output.")
+    }
   }
 
   if (autoRefreshCache) {
@@ -40,7 +51,6 @@ class Memoize[R](maxCacheAgeMs: Long, f: () => R, autoRefreshCache: Boolean) ext
         cache.get.value
     }
   }
-
 }
 
 object Memoize {

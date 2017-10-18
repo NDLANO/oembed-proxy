@@ -13,7 +13,7 @@ import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.OEmbedProxyProperties
 import no.ndla.oembedproxy.caching.Memoize
-import no.ndla.oembedproxy.model.{OEmbedEndpoint, OEmbedProvider, ProviderListNotFetchedException}
+import no.ndla.oembedproxy.model.{DoNotUpdateMemoizeException, OEmbedEndpoint, OEmbedProvider}
 
 import scala.util.{Failure, Success}
 import scalaj.http.{Http, HttpRequest}
@@ -60,14 +60,19 @@ trait ProviderService {
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
+      import java.nio.file.{Paths, Files}
+      if (Files.exists(Paths.get("/tmp/nowork"))){
+        logger.error(s"Failed to load providers from ${request.url}.")
+        throw new DoNotUpdateMemoizeException("HTTPREQUESTERROR SOMETHING SOMETHING EXAMPLE")
+      }
+
       val providersTry = ndlaClient.fetch[List[OEmbedProvider]](request)
       providersTry match {
         // Only keep providers with at least one endpoint with at least one url
         case Success(providers) => providers.filter(_.endpoints.nonEmpty).filter(_.endpoints.forall(endpoint => endpoint.url.isDefined))
-        case Failure(ex) => {
-          logger.warn(ex.getMessage)
-          throw new ProviderListNotFetchedException(ex.getMessage)
-        }
+        case Failure(ex) =>
+          logger.error(s"Failed to load providers from ${request.url}.")
+          throw new DoNotUpdateMemoizeException(ex.getMessage)
       }
     }
   }
