@@ -16,6 +16,10 @@ import org.scalatra.servlet.ScalatraListener
 import scala.io.Source
 
 object JettyLauncher extends LazyLogging {
+  def fetchProviderList = {
+    ComponentRegistry.providerService.loadProviders()
+  }
+
   def main(args: Array[String]) {
     logger.info(Source.fromInputStream(getClass.getResourceAsStream("/log-license.txt")).mkString)
 
@@ -27,6 +31,8 @@ object JettyLauncher extends LazyLogging {
     servletContext.addEventListener(new ScalatraListener)
     servletContext.addServlet(classOf[DefaultServlet], "/")
     servletContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false")
+
+    fetchProviderList
 
     val server = new Server(port)
     server.setHandler(servletContext)

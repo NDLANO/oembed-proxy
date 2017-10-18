@@ -32,3 +32,4 @@ case class Error(
 
 class ParameterMissingException(message: String) extends RuntimeException(message)
 class ProviderNotSupportedException(message: String) extends RuntimeException(message)
+class DoNotUpdateMemoizeException(message: String) extends RuntimeException(message)

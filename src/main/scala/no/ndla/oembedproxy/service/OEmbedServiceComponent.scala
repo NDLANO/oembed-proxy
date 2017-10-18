@@ -17,20 +17,20 @@ import scalaj.http.{Http, HttpOptions}
 
 
 trait OEmbedServiceComponent extends LazyLogging {
-  this: NdlaClient =>
+  this: NdlaClient with ProviderService =>
   val oEmbedService: OEmbedService
 
-  class OEmbedService(providers: List[OEmbedProvider]) {
+  class OEmbedService(optionalProviders: Option[List[OEmbedProvider]] = None) {
     implicit val formats = org.json4s.DefaultFormats
 
     def get(url: String, maxWidth: Option[String], maxHeight: Option[String]): Try[OEmbed] = {
-      providers.find(_.supports(url)) match {
+      val p = optionalProviders.toList.flatten ++ providerService.loadProviders()
+      p.find(_.supports(url)) match {
         case None => throw new ProviderNotSupportedException(s"Could not find an oembed-provider for the url '$url'")
-        case Some(provider) => {
+        case Some(provider) =>
           ndlaClient.fetch[OEmbed](
             Http(provider.requestUrl(url, maxWidth, maxHeight)).option(HttpOptions.followRedirects(true))
           )
-        }
       }
     }
   }

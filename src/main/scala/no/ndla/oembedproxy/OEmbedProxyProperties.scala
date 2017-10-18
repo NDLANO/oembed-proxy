@@ -13,7 +13,7 @@ import scala.util.Properties.envOrNone
 
 
 object OEmbedProxyProperties {
-  val ApplicationPort = 80
+  val ApplicationPort = propOrElse("APPLICATION_PORT", "80").toInt
 
   val CorrelationIdKey = "correlationID"
   val CorrelationIdHeader = "X-Correlation-ID"
@@ -21,6 +21,8 @@ object OEmbedProxyProperties {
 
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "https://oembed.com/providers.json"
+  val ProviderListCacheAgeInMs: Long = 1000 * 60 * 60 * 24 // 24 hour caching
+  val ProviderListRetryTimeInMs: Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
