@@ -60,7 +60,7 @@ trait ProviderService {
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
-      val providersTry = ndlaClient.fetchWithForwardedAuth[List[OEmbedProvider]](request)
+      val providersTry = ndlaClient.fetch[List[OEmbedProvider]](request)
       providersTry match {
         // Only keep providers with at least one endpoint with at least one url
         case Success(providers) => providers.filter(_.endpoints.nonEmpty).filter(_.endpoints.forall(endpoint => endpoint.url.isDefined))

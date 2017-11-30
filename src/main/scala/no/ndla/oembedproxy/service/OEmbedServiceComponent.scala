@@ -28,7 +28,7 @@ trait OEmbedServiceComponent extends LazyLogging {
       p.find(_.supports(url)) match {
         case None => throw new ProviderNotSupportedException(s"Could not find an oembed-provider for the url '$url'")
         case Some(provider) =>
-          ndlaClient.fetchWithForwardedAuth[OEmbed](
+          ndlaClient.fetch[OEmbed](
             Http(provider.requestUrl(url, maxWidth, maxHeight)).option(HttpOptions.followRedirects(true))
           )
       }
