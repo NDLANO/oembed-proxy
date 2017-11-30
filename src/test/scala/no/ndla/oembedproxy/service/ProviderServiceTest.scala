@@ -27,14 +27,14 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
   test("That loadProvidersFromRequest fails on invalid url/bad response") {
     val invalidUrl = "invalidUrl123"
-    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
+    when(ndlaClient.fetchWithForwardedAuth[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
     intercept[DoNotUpdateMemoizeException]{
       providerService.loadProvidersFromRequest(Http(invalidUrl))
     }
   }
 
   test("That loadProvidersFromRequest does not return an incomplete provider") {
-    when(ndlaClient.fetch[List[OEmbedProvider]]
+    when(ndlaClient.fetchWithForwardedAuth[List[OEmbedProvider]]
         (any[HttpRequest])
         (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(IncompleteProvider)))
@@ -44,7 +44,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That loadProvidersFromRequest works for a single provider") {
-    when(ndlaClient.fetch[List[OEmbedProvider]]
+    when(ndlaClient.fetchWithForwardedAuth[List[OEmbedProvider]]
       (any[HttpRequest])
       (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(CompleteProvider)))
@@ -54,7 +54,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That loadProvidersFromRequest only returns the complete provider") {
-    when(ndlaClient.fetch[List[OEmbedProvider]]
+    when(ndlaClient.fetchWithForwardedAuth[List[OEmbedProvider]]
       (any[HttpRequest])
       (any[Manifest[List[OEmbedProvider]]])
     ).thenReturn(Success(List(IncompleteProvider, CompleteProvider)))
