@@ -35,6 +35,13 @@ object OEmbedProxyProperties {
     "prod" -> "https?://ndla-frontend.api.ndla.no/article/*"
   ).getOrElse(Environment, s"https?://ndla-frontend.$Environment.api.ndla.no/article/*")
 
+  val NdlaH5POembedProvider = Map(
+    "prod" -> "https://h5p.ndla.no"
+  ).getOrElse(Environment, "https://h5p-test.ndla.no")
+  val NdlaH5PApprovedUrl = Map(
+    "prod" -> "https://h5p.ndla.no/resource/*"
+  ).getOrElse(Environment, "https://h5p-test.ndla.no/resource/*")
+
   val OembedProxyControllerMountPoint = "/oembed-proxy/v1/oembed"
   val ResourcesAppMountPoint = "/oembed-proxy/api-docs"
   val HealthControllerMountPoint = "/health"

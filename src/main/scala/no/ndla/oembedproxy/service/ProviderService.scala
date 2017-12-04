@@ -39,8 +39,9 @@ trait ProviderService {
     val YoutubeEndpoint = OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
     val YoutuProvider = OEmbedProvider("YouTube", "http://youtu.be", List(YoutubeEndpoint))
 
-    val H5PEndpoint = OEmbedEndpoint(None, Some("https://ndlah5p.joubel.com/h5p-oembed.json"), None, None)
-    val H5PProvider = OEmbedProvider("ndlah5p.joubel.com", "https://ndlah5p.joubel.com", List(H5PEndpoint))
+    val H5PApprovedUrls = List(OEmbedProxyProperties.NdlaH5PApprovedUrl)
+    val H5PEndpoint = OEmbedEndpoint(Some(H5PApprovedUrls), Some(s"${OEmbedProxyProperties.NdlaH5POembedProvider}/oembed"), None, None)
+    val H5PProvider = OEmbedProvider("H5P", OEmbedProxyProperties.NdlaH5POembedProvider, List(H5PEndpoint))
 
     val NdlaApiApprovedUrls = List(OEmbedProxyProperties.NdlaApprovedUrl)
     val NdlaApiEndpoint = OEmbedEndpoint(Some(NdlaApiApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
