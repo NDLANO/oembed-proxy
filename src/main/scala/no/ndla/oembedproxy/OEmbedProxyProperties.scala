@@ -13,6 +13,8 @@ import scala.util.Properties.envOrNone
 
 
 object OEmbedProxyProperties {
+  val Auth0LoginEndpoint = "https://ndla.eu.auth0.com/authorize"
+
   val ApplicationPort = propOrElse("APPLICATION_PORT", "80").toInt
 
   val CorrelationIdKey = "correlationID"
