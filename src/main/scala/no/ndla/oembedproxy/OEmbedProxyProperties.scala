@@ -27,7 +27,7 @@ object OEmbedProxyProperties {
   val ProviderListRetryTimeInMs: Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
 
   val NdlaApiOembedServiceUrl = Map(
-    "local" -> "http://api-gateway.ndla-local:30017/oembed",
+    "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
     "prod" -> "https://ndla-frontend.api.ndla.no/oembed"
   ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
 
