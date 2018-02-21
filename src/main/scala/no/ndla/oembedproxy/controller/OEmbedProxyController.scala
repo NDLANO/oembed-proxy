@@ -18,6 +18,7 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.ScalatraServlet
 import org.scalatra.json.NativeJsonSupport
 import org.scalatra.swagger.{ResponseMessage, Swagger, SwaggerSupport}
+import org.scalatra.util.NotNothing
 
 import scala.util.{Failure, Success}
 
@@ -38,19 +39,15 @@ trait OEmbedProxyController {
     val response501 = ResponseMessage(501, "Provider Not Supported", Some("Error"))
     val response502 = ResponseMessage(502, "Bad Gateway", Some("Error"))
 
-    val oEmbed =
-      (apiOperation[OEmbed]("oembed")
-        summary "Returns eEmbed information for a given url"
-        notes "Returns eEmbed information for a given url"
-        parameters(
-        headerParam[Option[String]]("X-Correlation-ID").description("User supplied correlation-id. May be omitted."),
-        headerParam[Option[String]]("app-key").description("Your app-key."),
-        queryParam[String]("url").description("The URL to retrieve embedding information for"),
-        queryParam[Option[String]]("maxwidth").description("The maximum width of the embedded resource"),
-        queryParam[Option[String]]("maxheight").description("The maximum height of the embedded resource")
-        )
-        authorizations "oauth2"
-        responseMessages (response400, response401, response500, response501, response502))
+    case class Param(paramName: String, description: String)
+
+    private val correlationId = Param("X-Correlation-ID","User supplied correlation-id. May be omitted.")
+    private val urlParam = Param("url", "The URL to retrieve embedding information for")
+    private val maxWidth = Param("maxwidth", "The maximum width of the embedded resource")
+    private val maxHeight = Param("maxheight", "The maximum height of the embedded resource")
+
+    protected def asQueryParam[T: Manifest: NotNothing](param: Param) = queryParam[T](param.paramName).description(param.description)
+    protected def asHeaderParam[T: Manifest: NotNothing](param: Param) = headerParam[T](param.paramName).description(param.description)
 
     before() {
       contentType = formats("json")
@@ -73,20 +70,30 @@ trait OEmbedProxyController {
       }
     }
 
+    val oEmbed =
+      (apiOperation[OEmbed]("oembed")
+        summary "Returns oEmbed information for a given url"
+        notes "Returns oEmbed information for a given url"
+        parameters(
+          asHeaderParam[Option[String]](correlationId),
+          asQueryParam[String](urlParam),
+          asQueryParam[Option[String]](maxWidth),
+          asQueryParam[Option[String]](maxHeight)
+        )
+        authorizations "oauth2"
+        responseMessages (response400, response401, response500, response501, response502))
 
     get("/", operation(oEmbed)) {
-      val urlOpt = params.get("url")
-      val maxWidth = params.get("maxwidth")
-      val maxHeight = params.get("maxheight")
+      val maxWidth = params.get(this.maxWidth.paramName)
+      val maxHeight = params.get(this.maxHeight.paramName)
 
-      urlOpt match {
-        case None => throw new ParameterMissingException("The required parameter 'url' is missing.")
-        case Some(url) => {
+      params.get(urlParam.paramName)match {
+        case None => throw new ParameterMissingException(s"The required parameter '${urlParam.paramName}' is missing.")
+        case Some(url) =>
           oEmbedService.get(url, maxWidth, maxHeight) match {
             case Success(oembed) => oembed
             case Failure(ex) => throw ex
           }
-        }
       }
     }
   }
