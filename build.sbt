@@ -3,8 +3,8 @@ import java.util.Properties
 val Scalaversion = "2.12.2"
 val Scalatraversion = "2.5.1"
 val ScalaLoggingVersion = "3.5.0"
-val Log4JVersion = "2.7"
-val JacksonVersion = "2.7.4"
+val Log4JVersion = "2.11.0"
+val JacksonVersion = "2.9.4"
 val Jettyversion = "9.2.10.v20150310"
 val ScalaTestVersion = "3.0.1"
 val MockitoVersion = "1.10.19"
@@ -30,7 +30,7 @@ lazy val oembed_proxy = (project in file(".")).
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.22",
+      "ndla" %% "network" % "0.29",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
@@ -40,7 +40,6 @@ lazy val oembed_proxy = (project in file(".")).
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s"   %% "json4s-native" % "3.5.0",
