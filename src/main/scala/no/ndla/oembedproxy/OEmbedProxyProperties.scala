@@ -38,9 +38,11 @@ object OEmbedProxyProperties {
   ).getOrElse(Environment, s"https?://ndla-frontend.$Environment.api.ndla.no/*")
 
   val NdlaH5POembedProvider = Map(
+    "brukertest" -> "https://h5p.ndla.no",
     "prod" -> "https://h5p.ndla.no"
   ).getOrElse(Environment, "https://h5p-test.ndla.no")
   val NdlaH5PApprovedUrl = Map(
+    "brukertest" -> "https://h5p.ndla.no/resource/*",
     "prod" -> "https://h5p.ndla.no/resource/*"
   ).getOrElse(Environment, "https://h5p-test.ndla.no/resource/*")
 
