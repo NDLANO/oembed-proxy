@@ -5,7 +5,7 @@ val Scalatraversion = "2.5.1"
 val ScalaLoggingVersion = "3.5.0"
 val Log4JVersion = "2.11.0"
 val JacksonVersion = "2.9.4"
-val Jettyversion = "9.2.10.v20150310"
+val Jettyversion = "9.4.10.v20180503"
 val ScalaTestVersion = "3.0.1"
 val MockitoVersion = "1.10.19"
 
