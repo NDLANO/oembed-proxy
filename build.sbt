@@ -45,7 +45,7 @@ lazy val oembed_proxy = (project in file(".")).
       "org.json4s"   %% "json4s-native" % "3.5.0",
       "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "2.3.0",
-      "com.netaporter" %% "scala-uri" % "0.4.16",
+      "io.lemonlabs" %% "scala-uri" % "1.1.1",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test")
   ).enablePlugins(DockerPlugin).enablePlugins(GitVersioning).enablePlugins(JettyPlugin)
