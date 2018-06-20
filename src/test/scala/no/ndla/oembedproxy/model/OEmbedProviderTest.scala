@@ -16,7 +16,7 @@ class OEmbedProviderTest extends UnitSuite {
   val ndlaEndpoint = OEmbedEndpoint(Some(List("http://www.ndla.no/*/123")), None, None, None)
   val youtubeEndpoint = OEmbedEndpoint(Some(List("http://www.youtube.com/*")), None, None, None)
 
-  val goOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List("oembed=true"))
+  val goOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List(("oembed", "true")))
   val goOpenProvider = OEmbedProvider("GoOpen.no", "http://www.goopen.no", goOpenEndpoint :: Nil)
 
   test("That hostMatches returns true for same host, regardless of protocol") {
@@ -54,19 +54,19 @@ class OEmbedProviderTest extends UnitSuite {
   test("That maxwidth is appended correctly") {
     val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
     val requestUrl = youtubeProvider.copy(endpoints = List(endpoint)).requestUrl("ABC", Some("100"), None)
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&maxwidth=100&format=json")
+    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxwidth=100")
   }
 
   test("That maxheight is appended correctly") {
     val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
     val requestUrl = youtubeProvider.copy(endpoints = List(endpoint)).requestUrl("ABC", None, Some("100"))
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&maxheight=100&format=json")
+    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxheight=100")
   }
 
   test("That both maxwidth and maxheight are appended correctly") {
     val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
     val requestUrl = youtubeProvider.copy(endpoints = List(endpoint)).requestUrl("ABC", Some("100"), Some("200"))
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&maxwidth=100&maxheight=200&format=json")
+    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxwidth=100&maxheight=200")
   }
 
   test("That mandatoryQueryParams are added when they are defined") {

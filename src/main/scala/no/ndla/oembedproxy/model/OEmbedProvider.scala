@@ -8,32 +8,40 @@
 
 package no.ndla.oembedproxy.model
 
-import com.netaporter.uri.Uri.parse
+import io.lemonlabs.uri.Url
+import io.lemonlabs.uri.dsl._
 
+case class OEmbedProvider(providerName: String,
+                          providerUrl: String,
+                          endpoints: List[OEmbedEndpoint],
+                          urlParser: String => String = x => x) {
 
-case class OEmbedProvider (providerName: String, providerUrl: String, endpoints: List[OEmbedEndpoint], urlParser: String => String = x => x) {
-
-  def supports(url: String):Boolean = {
+  def supports(url: String): Boolean = {
     endpoints.exists(_.supports(url)) || hostMatches(url)
   }
 
   def hostMatches(url: String): Boolean = {
-    parse(url).host == parse(providerUrl).host
+    Url.parse(url).hostOption == Url.parse(providerUrl).hostOption
   }
 
-  private def _requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
+  private def _requestUrl(url: String,
+                          maxWidth: Option[String],
+                          maxHeight: Option[String]): String = {
     endpoints.find(_.url.isDefined) match {
-      case None => throw new RuntimeException(s"The provider '$providerName' has no embed-url available")
-      case Some(endpoint) => {
-        val mandatoryQueryParams = if(endpoint.mandatoryQueryParams.nonEmpty) s"&${endpoint.mandatoryQueryParams.mkString("&")}" else ""
-        val embedUrl = endpoint.url.get.replace("{format}", "json")  // Some providers have {format} instead of ?format=
-        val width = maxWidth.map(s => s"&maxwidth=$s").getOrElse("")
-        val height = maxHeight.map(s => s"&maxheight=$s").getOrElse("")
-        s"$embedUrl?url=$url$width$height&format=json$mandatoryQueryParams"
-      }
+      case None =>
+        throw new RuntimeException(
+          s"The provider '$providerName' has no embed-url available")
+      case Some(endpoint) =>
+        val embedUrl = endpoint.url.get.replace("{format}", "json") // Some providers have {format} instead of ?format=
+        val width = maxWidth.map(("maxwidth", _)).toList
+        val height = maxHeight.map(("maxheight", _)).toList
+        val params = List(("url", url), ("format", "json")) ++ endpoint.mandatoryQueryParams ++ width ++ height
+        Url.parse(embedUrl).addParams(params)
     }
   }
 
-  def requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = _requestUrl(urlParser(url), maxWidth, maxHeight)
+  def requestUrl(url: String,
+                 maxWidth: Option[String],
+                 maxHeight: Option[String]): String =
+    _requestUrl(urlParser(url), maxWidth, maxHeight)
 }
-
