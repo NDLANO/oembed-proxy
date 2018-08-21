@@ -17,16 +17,12 @@ appProperties := {
   prop
 }
 
-lazy val commonSettings = Seq(
-  organization := appProperties.value.getProperty("NDLAOrganization"),
-  version := appProperties.value.getProperty("NDLAComponentVersion"),
-  scalaVersion := Scalaversion
-)
-
 lazy val oembed_proxy = (project in file(".")).
-  settings(commonSettings: _*).
   settings(
     name := "oembed-proxy",
+    organization := appProperties.value.getProperty("NDLAOrganization"),
+    version := appProperties.value.getProperty("NDLAComponentVersion"),
+    scalaVersion := Scalaversion,
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
@@ -49,27 +45,27 @@ lazy val oembed_proxy = (project in file(".")).
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test")
-  ).enablePlugins(DockerPlugin).enablePlugins(GitVersioning).enablePlugins(JettyPlugin)
+  ).enablePlugins(DockerPlugin).enablePlugins(JettyPlugin)
 
-assemblyJarName in assembly := "oembed-proxy.jar"
-mainClass in assembly := Some("no.ndla.oembedproxy.JettyLauncher")
-assemblyMergeStrategy in assembly := {
+assembly / assemblyJarName := "oembed-proxy.jar"
+assembly / mainClass := Some("no.ndla.oembedproxy.JettyLauncher")
+assembly / assemblyMergeStrategy := {
   case "mime.types" => MergeStrategy.filterDistinctLines
   case PathList("org", "joda", "convert", "ToString.class")  => MergeStrategy.first
   case PathList("org", "joda", "convert", "FromString.class")  => MergeStrategy.first
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
 
 // Don't run Integration tests in default run
-testOptions in Test += Tests.Argument("-l", "no.ndla.IntegrationTest")
+Test / testOptions += Tests.Argument("-l", "no.ndla.IntegrationTest")
 
 // Make the docker task depend on the assembly task, which generates a fat JAR file
-docker <<= (docker dependsOn assembly)
+docker := (docker dependsOn assembly).value
 
-dockerfile in docker := {
-  val artifact = (assemblyOutputPath in assembly).value
+docker / dockerfile := {
+  val artifact = (assembly / assemblyOutputPath ).value
   val artifactTargetPath = s"/app/${artifact.name}"
   new Dockerfile {
     from("openjdk:8-jre-alpine")
@@ -79,7 +75,7 @@ dockerfile in docker := {
   }
 }
 
-imageNames in docker := Seq(
+docker / imageNames := Seq(
   ImageName(
     namespace = Some(organization.value),
     repository = name.value,
