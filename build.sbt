@@ -58,6 +58,24 @@ assembly / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
+val checkfmt = taskKey[Boolean]("check for code style errors")
+checkfmt := {
+  val noErrorsInMainFiles = (Compile / scalafmtCheck).value
+  val noErrorsInTestFiles = (Test / scalafmtCheck).value
+  val noErrorsInBuildFiles = (Compile / scalafmtSbtCheck).value
+
+  noErrorsInMainFiles && noErrorsInTestFiles && noErrorsInBuildFiles
+}
+
+Test / test := (Test / test).dependsOn(Test / checkfmt).value
+
+val fmt = taskKey[Unit]("Automatically apply code style fixes")
+fmt := {
+  (Compile / scalafmt).value
+  (Test / scalafmt).value
+  (Compile / scalafmtSbt).value
+}
+
 // Don't run Integration tests in default run
 Test / testOptions += Tests.Argument("-l", "no.ndla.IntegrationTest")
 
