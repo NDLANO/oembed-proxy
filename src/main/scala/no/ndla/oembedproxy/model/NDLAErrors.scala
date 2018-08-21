@@ -31,5 +31,5 @@ case class Error(
   @(ApiModelProperty@field)(description = "When the error occured") occuredAt: String = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()))
 
 class ParameterMissingException(message: String) extends RuntimeException(message)
-class ProviderNotSupportedException(message: String) extends RuntimeException(message)
+case class ProviderNotSupportedException(message: String) extends RuntimeException(message)
 class DoNotUpdateMemoizeException(message: String) extends RuntimeException(message)

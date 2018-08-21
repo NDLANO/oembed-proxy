@@ -38,12 +38,10 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
     override val loadProviders = providerMemoize
   }
 
-  test("That get throws ProviderNotSupportedException when no providers support the url") {
-    assertResult("Could not find an oembed-provider for the url 'ABC'") {
-      intercept[ProviderNotSupportedException]{
-        oEmbedService.get(url = "ABC", None, None)
-      }.getMessage
-    }
+  test("That get returns Failure(ProviderNotSupportedException) when no providers support the url") {
+    val Failure(ex: ProviderNotSupportedException) = oEmbedService.get(url = "ABC", None, None)
+
+    ex.getMessage should equal ("Could not find an oembed-provider for the url 'ABC'")
   }
 
   test("That get returns a failure with HttpRequestException when receiving http error") {

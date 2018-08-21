@@ -87,7 +87,7 @@ trait OEmbedProxyController {
       val maxWidth = params.get(this.maxWidth.paramName)
       val maxHeight = params.get(this.maxHeight.paramName)
 
-      params.get(urlParam.paramName)match {
+      params.get(urlParam.paramName) match {
         case None => throw new ParameterMissingException(s"The required parameter '${urlParam.paramName}' is missing.")
         case Some(url) =>
           oEmbedService.get(url, maxWidth, maxHeight) match {
