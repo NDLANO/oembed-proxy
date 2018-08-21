@@ -15,7 +15,8 @@ case class OEmbedProvider(providerName: String,
                           providerUrl: String,
                           endpoints: List[OEmbedEndpoint],
                           urlParser: String => String = identity,
-                          postProcessor: (String, OEmbed) => OEmbed = (_: String, o: OEmbed) => o) {
+                          postProcessor: (String, OEmbed) => OEmbed =
+                            (_: String, o: OEmbed) => o) {
 
   def supports(url: String): Boolean = {
     endpoints.exists(_.supports(url)) || hostMatches(url)

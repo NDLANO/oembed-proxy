@@ -17,8 +17,8 @@ appProperties := {
   prop
 }
 
-lazy val oembed_proxy = (project in file(".")).
-  settings(
+lazy val oembed_proxy = (project in file("."))
+  .settings(
     name := "oembed-proxy",
     organization := appProperties.value.getProperty("NDLAOrganization"),
     version := appProperties.value.getProperty("NDLAComponentVersion"),
@@ -38,21 +38,26 @@ lazy val oembed_proxy = (project in file(".")).
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
-      "org.json4s"   %% "json4s-native" % "3.5.0",
-      "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
+      "org.json4s" %% "json4s-native" % "3.5.0",
+      "org.scalatra" %% "scalatra-swagger" % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "2.3.0",
       "io.lemonlabs" %% "scala-uri" % "1.1.5",
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test")
-  ).enablePlugins(DockerPlugin).enablePlugins(JettyPlugin)
+      "org.mockito" % "mockito-all" % MockitoVersion % "test"
+    )
+  )
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(JettyPlugin)
 
 assembly / assemblyJarName := "oembed-proxy.jar"
 assembly / mainClass := Some("no.ndla.oembedproxy.JettyLauncher")
 assembly / assemblyMergeStrategy := {
   case "mime.types" => MergeStrategy.filterDistinctLines
-  case PathList("org", "joda", "convert", "ToString.class")  => MergeStrategy.first
-  case PathList("org", "joda", "convert", "FromString.class")  => MergeStrategy.first
+  case PathList("org", "joda", "convert", "ToString.class") =>
+    MergeStrategy.first
+  case PathList("org", "joda", "convert", "FromString.class") =>
+    MergeStrategy.first
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
@@ -83,21 +88,26 @@ Test / testOptions += Tests.Argument("-l", "no.ndla.IntegrationTest")
 docker := (docker dependsOn assembly).value
 
 docker / dockerfile := {
-  val artifact = (assembly / assemblyOutputPath ).value
+  val artifact = (assembly / assemblyOutputPath).value
   val artifactTargetPath = s"/app/${artifact.name}"
   new Dockerfile {
     from("openjdk:8-jre-alpine")
 
     add(artifact, artifactTargetPath)
-    entryPoint("java", "-Dorg.scalatra.environment=production", "-jar", artifactTargetPath)
+    entryPoint("java",
+               "-Dorg.scalatra.environment=production",
+               "-jar",
+               artifactTargetPath)
   }
 }
 
 docker / imageNames := Seq(
-  ImageName(
-    namespace = Some(organization.value),
-    repository = name.value,
-    tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
+  ImageName(namespace = Some(organization.value),
+            repository = name.value,
+            tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
 
-resolvers ++= scala.util.Properties.envOrNone("NDLA_RELEASES").map(repo => "Release Sonatype Nexus Repository Manager" at repo).toSeq
+resolvers ++= scala.util.Properties
+  .envOrNone("NDLA_RELEASES")
+  .map(repo => "Release Sonatype Nexus Repository Manager" at repo)
+  .toSeq

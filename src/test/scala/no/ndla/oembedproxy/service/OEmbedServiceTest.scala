@@ -20,43 +20,72 @@ import scala.util.{Failure, Success}
 import scalaj.http.HttpRequest
 
 class OEmbedServiceTest extends UnitSuite with TestEnvironment {
-  val ndlaProvider = OEmbedProvider("ndla", "http://ndla.no", List(OEmbedEndpoint(None, Some("http://ndla.no/services/oembed"), None, None)))
-  val youtubeProvider = OEmbedProvider("YouTube", "http://www.youtube.com/", List(OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), Some(true), None)))
+  val ndlaProvider = OEmbedProvider(
+    "ndla",
+    "http://ndla.no",
+    List(
+      OEmbedEndpoint(None, Some("http://ndla.no/services/oembed"), None, None)))
+  val youtubeProvider = OEmbedProvider(
+    "YouTube",
+    "http://www.youtube.com/",
+    List(
+      OEmbedEndpoint(None,
+                     Some("http://www.youtube.com/oembed"),
+                     Some(true),
+                     None)))
 
-  val OEmbedResponse = OEmbed("rich",
+  val OEmbedResponse = OEmbed(
+    "rich",
     "1.0",
     Some("A Confectioner in the UK"),
-    None, None, None,
+    None,
+    None,
+    None,
     Some("NDLA - Nasjonal digital læringsarene"),
     Some("http://ndla.no"),
-    None, None, None, None, None, None, None,
-    Some("<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>"))
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(
+      "<iframe src='http://ndla.no/en/node/128905/oembed' allowfullscreen></iframe>")
+  )
 
-  override val oEmbedService = new OEmbedService(Some(List(ndlaProvider, youtubeProvider)))
-  val providerMemoize = new Memoize(0, 0, ()=>List[OEmbedProvider](), false)
+  override val oEmbedService = new OEmbedService(
+    Some(List(ndlaProvider, youtubeProvider)))
+  val providerMemoize = new Memoize(0, 0, () => List[OEmbedProvider](), false)
   override val providerService = new ProviderService {
     override val loadProviders = providerMemoize
   }
 
-  test("That get returns Failure(ProviderNotSupportedException) when no providers support the url") {
-    val Failure(ex: ProviderNotSupportedException) = oEmbedService.get(url = "ABC", None, None)
+  test(
+    "That get returns Failure(ProviderNotSupportedException) when no providers support the url") {
+    val Failure(ex: ProviderNotSupportedException) =
+      oEmbedService.get(url = "ABC", None, None)
 
-    ex.getMessage should equal ("Could not find an oembed-provider for the url 'ABC'")
+    ex.getMessage should equal(
+      "Could not find an oembed-provider for the url 'ABC'")
   }
 
-  test("That get returns a failure with HttpRequestException when receiving http error") {
-    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Failure(new HttpRequestException("An error occured")))
+  test(
+    "That get returns a failure with HttpRequestException when receiving http error") {
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]]))
+      .thenReturn(Failure(new HttpRequestException("An error occured")))
     val oembedTry = oEmbedService.get("http://www.youtube.com/abc", None, None)
     oembedTry should be a 'failure
-    oembedTry.failure.exception.getMessage should equal ("An error occured")
+    oembedTry.failure.exception.getMessage should equal("An error occured")
   }
 
   test("That get returns a Success with an oEmbed when http call is successful") {
-    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]])).thenReturn(Success(OEmbedResponse))
+    when(ndlaClient.fetch[OEmbed](any[HttpRequest])(any[Manifest[OEmbed]]))
+      .thenReturn(Success(OEmbedResponse))
     val oembedTry = oEmbedService.get("http://ndla.no/abc", None, None)
     oembedTry should be a 'success
-    oembedTry.get.`type` should equal ("rich")
-    oembedTry.get.title.getOrElse("") should equal ("A Confectioner in the UK")
+    oembedTry.get.`type` should equal("rich")
+    oembedTry.get.title.getOrElse("") should equal("A Confectioner in the UK")
   }
 
 }

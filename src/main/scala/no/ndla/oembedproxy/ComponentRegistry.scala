@@ -12,14 +12,12 @@ import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.controller.{HealthController, OEmbedProxyController}
 import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 
-
 object ComponentRegistry
-  extends OEmbedProxyController
+    extends OEmbedProxyController
     with OEmbedServiceComponent
     with NdlaClient
     with ProviderService
-    with HealthController
-{
+    with HealthController {
   implicit val swagger = new OEmbedSwagger
 
   lazy val providerService = new ProviderService

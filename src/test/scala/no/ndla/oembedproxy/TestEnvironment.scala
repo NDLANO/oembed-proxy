@@ -14,15 +14,13 @@ import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 import org.mockito.Mockito
 import org.scalatest.mock.MockitoSugar
 
-
 trait TestEnvironment
-  extends OEmbedProxyController
-  with OEmbedServiceComponent
-  with NdlaClient
-  with ProviderService
-  with MockitoSugar
-  with HealthController
-{
+    extends OEmbedProxyController
+    with OEmbedServiceComponent
+    with NdlaClient
+    with ProviderService
+    with MockitoSugar
+    with HealthController {
   val oEmbedService = mock[OEmbedService]
   val oEmbedProxyController = mock[OEmbedProxyController]
   val ndlaClient = mock[NdlaClient]
@@ -30,6 +28,9 @@ trait TestEnvironment
   val healthController = mock[HealthController]
 
   def resetMocks() = {
-    Mockito.reset(oEmbedService, oEmbedProxyController, ndlaClient, providerService)
+    Mockito.reset(oEmbedService,
+                  oEmbedProxyController,
+                  ndlaClient,
+                  providerService)
   }
 }

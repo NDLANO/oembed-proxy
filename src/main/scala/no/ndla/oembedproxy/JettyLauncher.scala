@@ -21,7 +21,10 @@ object JettyLauncher extends LazyLogging {
   }
 
   def main(args: Array[String]) {
-    logger.info(Source.fromInputStream(getClass.getResourceAsStream("/log-license.txt")).mkString)
+    logger.info(
+      Source
+        .fromInputStream(getClass.getResourceAsStream("/log-license.txt"))
+        .mkString)
 
     val startMillis = System.currentTimeMillis
     val port = OEmbedProxyProperties.ApplicationPort
@@ -30,7 +33,9 @@ object JettyLauncher extends LazyLogging {
     servletContext.setContextPath("/")
     servletContext.addEventListener(new ScalatraListener)
     servletContext.addServlet(classOf[DefaultServlet], "/")
-    servletContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false")
+    servletContext.setInitParameter(
+      "org.eclipse.jetty.servlet.Default.dirAllowed",
+      "false")
 
     fetchProviderList
 
