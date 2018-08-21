@@ -34,5 +34,5 @@ object OEmbedConverterService {
 
   def removeQueryStringAndFragment(url: String): String = Url.parse(removeQueryString(url)).withFragment(None)
 
-  def filterQueryNames(url: String, allowedQueryParamNames: Set[String]): String = Url.parse(url).filterQueryNames(allowedQueryParamNames.contains)
+  private def filterQueryNames(url: String, allowedQueryParamNames: Set[String]): String = Url.parse(url).filterQueryNames(allowedQueryParamNames.contains)
 }
