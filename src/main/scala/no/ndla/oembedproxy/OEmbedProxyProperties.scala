@@ -28,14 +28,14 @@ object OEmbedProxyProperties {
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
-    "prod" -> "https://ndla-frontend.api.ndla.no/oembed"
+    "prod" -> "https://ndla.no/oembed"
   ).getOrElse(Environment,
               s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
 
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = Map(
     "local" -> "http://api-gateway.ndla-local:30017/*",
-    "prod" -> "https?://beta.ndla.no/*"
+    "prod" -> "https?://ndla.no/*"
   ).getOrElse(Environment, s"https?://ndla-frontend.$Environment.api.ndla.no/*")
 
   val NdlaH5POembedProvider = Map(
