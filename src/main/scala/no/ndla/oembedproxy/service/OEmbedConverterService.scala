@@ -17,7 +17,8 @@ object OEmbedConverterService {
                                             oembed: OEmbed): OEmbed = {
     requestUrl.query
       .param("start")
-      .orElse(requestUrl.query.param("time_continue")) match {
+      .orElse(requestUrl.query.param("time_continue"))
+      .orElse(requestUrl.query.param("t")) match {
       case None => oembed
       case Some(timestamp) =>
         val newHtml = oembed.html

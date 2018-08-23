@@ -17,6 +17,8 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       "https://www.youtube.com/watch?time_continue=43&amp;v=vZCsuV7Rb_w"
     val requestUrlWithStart =
       "https://www.youtube.com/watch?start=43&v=vZCsuV7Rb_w"
+    val requestUrlWithT =
+      "https://www.youtube.com/watch?t=43&v=vZCsuV7Rb_w"
     val requestUrlWithtoutTimestamp =
       "https://www.youtube.com/watch?v=vZCsuV7Rb_w"
     val oembed = OEmbed(
@@ -46,6 +48,9 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       .html should equal(expectedResult)
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithStart, oembed)
+      .html should equal(expectedResult)
+    OEmbedConverterService
+      .addYoutubeTimestampIfdefinedInRequest(requestUrlWithT, oembed)
       .html should equal(expectedResult)
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithtoutTimestamp,
