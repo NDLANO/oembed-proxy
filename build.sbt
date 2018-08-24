@@ -1,6 +1,6 @@
 import java.util.Properties
 
-val Scalaversion = "2.12.2"
+val Scalaversion = "2.12.6"
 val Scalatraversion = "2.5.1"
 val ScalaLoggingVersion = "3.5.0"
 val Log4JVersion = "2.11.0"
@@ -17,16 +17,12 @@ appProperties := {
   prop
 }
 
-lazy val commonSettings = Seq(
-  organization := appProperties.value.getProperty("NDLAOrganization"),
-  version := appProperties.value.getProperty("NDLAComponentVersion"),
-  scalaVersion := Scalaversion
-)
-
-lazy val oembed_proxy = (project in file(".")).
-  settings(commonSettings: _*).
-  settings(
+lazy val oembed_proxy = (project in file("."))
+  .settings(
     name := "oembed-proxy",
+    organization := appProperties.value.getProperty("NDLAOrganization"),
+    version := appProperties.value.getProperty("NDLAComponentVersion"),
+    scalaVersion := Scalaversion,
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8"),
     libraryDependencies ++= Seq(
@@ -42,47 +38,76 @@ lazy val oembed_proxy = (project in file(".")).
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % JacksonVersion,
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
-      "org.json4s"   %% "json4s-native" % "3.5.0",
-      "org.scalatra" %% "scalatra-swagger"  % Scalatraversion,
+      "org.json4s" %% "json4s-native" % "3.5.0",
+      "org.scalatra" %% "scalatra-swagger" % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "2.3.0",
-      "io.lemonlabs" %% "scala-uri" % "1.1.1",
+      "io.lemonlabs" %% "scala-uri" % "1.1.5",
+      "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test")
-  ).enablePlugins(DockerPlugin).enablePlugins(GitVersioning).enablePlugins(JettyPlugin)
+      "org.mockito" % "mockito-all" % MockitoVersion % "test"
+    )
+  )
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(JettyPlugin)
 
-assemblyJarName in assembly := "oembed-proxy.jar"
-mainClass in assembly := Some("no.ndla.oembedproxy.JettyLauncher")
-assemblyMergeStrategy in assembly := {
+assembly / assemblyJarName := "oembed-proxy.jar"
+assembly / mainClass := Some("no.ndla.oembedproxy.JettyLauncher")
+assembly / assemblyMergeStrategy := {
   case "mime.types" => MergeStrategy.filterDistinctLines
-  case PathList("org", "joda", "convert", "ToString.class")  => MergeStrategy.first
-  case PathList("org", "joda", "convert", "FromString.class")  => MergeStrategy.first
+  case PathList("org", "joda", "convert", "ToString.class") =>
+    MergeStrategy.first
+  case PathList("org", "joda", "convert", "FromString.class") =>
+    MergeStrategy.first
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
 
+val checkfmt = taskKey[Boolean]("check for code style errors")
+checkfmt := {
+  val noErrorsInMainFiles = (Compile / scalafmtCheck).value
+  val noErrorsInTestFiles = (Test / scalafmtCheck).value
+  val noErrorsInBuildFiles = (Compile / scalafmtSbtCheck).value
+
+  noErrorsInMainFiles && noErrorsInTestFiles && noErrorsInBuildFiles
+}
+
+Test / test := (Test / test).dependsOn(Test / checkfmt).value
+
+val fmt = taskKey[Unit]("Automatically apply code style fixes")
+fmt := {
+  (Compile / scalafmt).value
+  (Test / scalafmt).value
+  (Compile / scalafmtSbt).value
+}
+
 // Don't run Integration tests in default run
-testOptions in Test += Tests.Argument("-l", "no.ndla.IntegrationTest")
+Test / testOptions += Tests.Argument("-l", "no.ndla.IntegrationTest")
 
 // Make the docker task depend on the assembly task, which generates a fat JAR file
-docker <<= (docker dependsOn assembly)
+docker := (docker dependsOn assembly).value
 
-dockerfile in docker := {
-  val artifact = (assemblyOutputPath in assembly).value
+docker / dockerfile := {
+  val artifact = (assembly / assemblyOutputPath).value
   val artifactTargetPath = s"/app/${artifact.name}"
   new Dockerfile {
     from("openjdk:8-jre-alpine")
 
     add(artifact, artifactTargetPath)
-    entryPoint("java", "-Dorg.scalatra.environment=production", "-jar", artifactTargetPath)
+    entryPoint("java",
+               "-Dorg.scalatra.environment=production",
+               "-jar",
+               artifactTargetPath)
   }
 }
 
-imageNames in docker := Seq(
-  ImageName(
-    namespace = Some(organization.value),
-    repository = name.value,
-    tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
+docker / imageNames := Seq(
+  ImageName(namespace = Some(organization.value),
+            repository = name.value,
+            tag = Some(System.getProperty("docker.tag", "SNAPSHOT")))
 )
 
-resolvers ++= scala.util.Properties.envOrNone("NDLA_RELEASES").map(repo => "Release Sonatype Nexus Repository Manager" at repo).toSeq
+resolvers ++= scala.util.Properties
+  .envOrNone("NDLA_RELEASES")
+  .map(repo => "Release Sonatype Nexus Repository Manager" at repo)
+  .toSeq

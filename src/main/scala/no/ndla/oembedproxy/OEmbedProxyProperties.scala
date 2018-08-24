@@ -11,7 +11,6 @@ package no.ndla.oembedproxy
 import no.ndla.network.Domains
 import scala.util.Properties.envOrNone
 
-
 object OEmbedProxyProperties {
   val Auth0LoginEndpoint = "https://ndla.eu.auth0.com/authorize"
 
@@ -24,12 +23,14 @@ object OEmbedProxyProperties {
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "https://oembed.com/providers.json"
   val ProviderListCacheAgeInMs: Long = 1000 * 60 * 60 * 24 // 24 hour caching
-  val ProviderListRetryTimeInMs: Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
+  val ProviderListRetryTimeInMs
+    : Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
     "prod" -> "https://ndla-frontend.api.ndla.no/oembed"
-  ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
+  ).getOrElse(Environment,
+              s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
 
   val NdlaApiOembedProvider = Domain
   val NdlaApprovedUrl = Map(
@@ -54,13 +55,12 @@ object OEmbedProxyProperties {
   val ResourcesAppMountPoint = "/oembed-proxy/api-docs"
   val HealthControllerMountPoint = "/health"
 
-
   lazy val Domain = Domains.get(Environment)
 
   def propOrElse(key: String, default: => String): String = {
     envOrNone(key) match {
       case Some(env) => env
-      case None => default
+      case None      => default
     }
   }
 }
