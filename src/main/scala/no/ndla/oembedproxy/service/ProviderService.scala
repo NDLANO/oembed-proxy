@@ -67,6 +67,18 @@ trait ProviderService {
                                            List(HttpsNdlaEndpoint),
                                            removeQueryString)
 
+    val NdlaApiApprovedUrls = OEmbedProxyProperties.NdlaApprovedUrl
+    val NdlaApiEndpoint = OEmbedEndpoint(
+      Some(NdlaApiApprovedUrls),
+      Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl),
+      None,
+      None)
+    val NdlaApiProvider = OEmbedProvider(
+      "NDLA Api",
+      OEmbedProxyProperties.NdlaApiOembedProvider,
+      List(NdlaApiEndpoint),
+      removeQueryString)
+
     val YoutubeEndpoint =
       OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
     val YoutuProvider = OEmbedProvider("YouTube",
@@ -90,18 +102,6 @@ trait ProviderService {
       "H5P",
       OEmbedProxyProperties.NdlaH5POembedProvider,
       List(H5PEndpoint))
-
-    val NdlaApiApprovedUrls = OEmbedProxyProperties.NdlaApprovedUrl
-    val NdlaApiEndpoint = OEmbedEndpoint(
-      Some(NdlaApiApprovedUrls),
-      Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl),
-      None,
-      None)
-    val NdlaApiProvider = OEmbedProvider(
-      "NDLA Api",
-      OEmbedProxyProperties.NdlaApiOembedProvider,
-      List(NdlaApiEndpoint),
-      removeQueryString)
 
     val TedApprovedUrls = List("https://www.ted.com/talks/*")
     val TedEndpoint = OEmbedEndpoint(
@@ -132,7 +132,7 @@ trait ProviderService {
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      NdlaApiProvider :: TedProvider :: H5PProvider :: HttpNdlaProvider :: HttpsNdlaProvider :: YoutubeProvider :: YoutuProvider :: GoOpenProvider :: IssuuProvider :: loadProvidersFromRequest(
+      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: GoOpenProvider :: IssuuProvider :: loadProvidersFromRequest(
         Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
