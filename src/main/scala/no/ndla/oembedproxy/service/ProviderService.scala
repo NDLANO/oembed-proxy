@@ -91,7 +91,7 @@ trait ProviderService {
       OEmbedProxyProperties.NdlaH5POembedProvider,
       List(H5PEndpoint))
 
-    val NdlaApiApprovedUrls = List(OEmbedProxyProperties.NdlaApprovedUrl)
+    val NdlaApiApprovedUrls = OEmbedProxyProperties.NdlaApprovedUrl
     val NdlaApiEndpoint = OEmbedEndpoint(
       Some(NdlaApiApprovedUrls),
       Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl),
