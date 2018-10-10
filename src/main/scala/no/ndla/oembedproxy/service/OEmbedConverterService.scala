@@ -15,20 +15,19 @@ import org.jsoup.Jsoup
 object OEmbedConverterService {
 
   def addYoutubeTimestampIfdefinedInRequest(requestUrl: String, oembed: OEmbed): OEmbed = {
-    requestUrl.query
-      .param("start")
-      .orElse(requestUrl.query.param("time_continue"))
-      .orElse(requestUrl.query.param("t")) match {
-      case None => oembed
-      case Some(timestamp) =>
+    val paramTypesToTransfer = List("start", "time_continue", "t", "end") // TODO: Either fix test or convert start, time_continue, t to "start" (probably fix test though)
+    val queryParamsToTransfer = requestUrl.query.filterNames(pn => paramTypesToTransfer.contains(pn)).params
+
+    queryParamsToTransfer match {
+      case Vector() => oembed
+      case params =>
         val newHtml = oembed.html
           .map(Jsoup.parseBodyFragment)
           .map(document => {
             Option(document.select("iframe[src]").first)
               .foreach(element => {
-                val newSrcUrl =
-                  element.attr("src").addParam("start", timestamp).toString
-                element.attr("src", newSrcUrl.toString)
+                val newUrl = element.attr("src").addParams(queryParamsToTransfer).toString
+                element.attr("src", newUrl.toString)
               })
             document
               .body()
