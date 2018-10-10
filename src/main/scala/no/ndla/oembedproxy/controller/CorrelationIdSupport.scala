@@ -10,10 +10,7 @@ package no.ndla.oembedproxy.controller
 
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.CorrelationID
-import no.ndla.oembedproxy.OEmbedProxyProperties.{
-  CorrelationIdHeader,
-  CorrelationIdKey
-}
+import no.ndla.oembedproxy.OEmbedProxyProperties.{CorrelationIdHeader, CorrelationIdKey}
 import org.apache.logging.log4j.ThreadContext
 import org.scalatra.CoreDsl
 

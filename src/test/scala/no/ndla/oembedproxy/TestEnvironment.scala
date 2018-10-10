@@ -28,9 +28,6 @@ trait TestEnvironment
   val healthController = mock[HealthController]
 
   def resetMocks() = {
-    Mockito.reset(oEmbedService,
-                  oEmbedProxyController,
-                  ndlaClient,
-                  providerService)
+    Mockito.reset(oEmbedService, oEmbedProxyController, ndlaClient, providerService)
   }
 }

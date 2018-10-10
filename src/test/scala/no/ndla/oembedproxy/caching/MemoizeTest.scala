@@ -20,10 +20,7 @@ class MemoizeTest extends UnitSuite {
 
   test("That an uncached value will do an actual call") {
     val targetMock = mock[Target]
-    val memoizedTarget = new Memoize[String](Long.MaxValue,
-                                             Long.MaxValue,
-                                             targetMock.targetMethod,
-                                             false)
+    val memoizedTarget = new Memoize[String](Long.MaxValue, Long.MaxValue, targetMock.targetMethod, false)
 
     when(targetMock.targetMethod()).thenReturn("Hello from mock")
     memoizedTarget() should equal("Hello from mock")
@@ -32,10 +29,7 @@ class MemoizeTest extends UnitSuite {
 
   test("That a cached value will not forward the call to the target") {
     val targetMock = mock[Target]
-    val memoizedTarget = new Memoize[String](Long.MaxValue,
-                                             Long.MaxValue,
-                                             targetMock.targetMethod,
-                                             false)
+    val memoizedTarget = new Memoize[String](Long.MaxValue, Long.MaxValue, targetMock.targetMethod, false)
 
     when(targetMock.targetMethod()).thenReturn("Hello from mock")
     Seq(1 to 10).foreach(i => {
@@ -48,10 +42,7 @@ class MemoizeTest extends UnitSuite {
     val cacheMaxAgeInMs = 20
     val cacheRetryInMs = 20
     val targetMock = mock[Target]
-    val memoizedTarget = new Memoize[String](cacheMaxAgeInMs,
-                                             cacheRetryInMs,
-                                             targetMock.targetMethod,
-                                             false)
+    val memoizedTarget = new Memoize[String](cacheMaxAgeInMs, cacheRetryInMs, targetMock.targetMethod, false)
 
     when(targetMock.targetMethod()).thenReturn("Hello from mock")
 
@@ -68,10 +59,7 @@ class MemoizeTest extends UnitSuite {
     val cacheMaxAgeInMs = 20
     val cacheRetryInMs = 20
     val targetMock = mock[Target]
-    val memoizedTarget = new Memoize[String](cacheMaxAgeInMs,
-                                             cacheRetryInMs,
-                                             targetMock.targetMethod,
-                                             false)
+    val memoizedTarget = new Memoize[String](cacheMaxAgeInMs, cacheRetryInMs, targetMock.targetMethod, false)
 
     when(targetMock.targetMethod())
       .thenReturn("Hello from mock")

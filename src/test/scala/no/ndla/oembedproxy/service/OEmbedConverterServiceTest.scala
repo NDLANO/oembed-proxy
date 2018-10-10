@@ -11,8 +11,7 @@ import no.ndla.oembedproxy.model.OEmbed
 import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
 
 class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
-  test(
-    "a start timestamp should be added on youtube urls if defined in request url") {
+  test("a start timestamp should be added on youtube urls if defined in request url") {
     val requestUrlWIthTimeContinue =
       "https://www.youtube.com/watch?time_continue=43&amp;v=vZCsuV7Rb_w"
     val requestUrlWithStart =
@@ -53,40 +52,30 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithT, oembed)
       .html should equal(expectedResult)
     OEmbedConverterService
-      .addYoutubeTimestampIfdefinedInRequest(requestUrlWithtoutTimestamp,
-                                             oembed)
+      .addYoutubeTimestampIfdefinedInRequest(requestUrlWithtoutTimestamp, oembed)
       .html should equal(oembed.html)
   }
 
   test("cleanYoutubeRequestUrl should strip all query params except 'v'") {
-    OEmbedConverterService.cleanYoutubeRequestUrl(
-      "http://youtube.com/watch?start=1&v=123asdf") should equal(
+    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?start=1&v=123asdf") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl(
-      "http://youtube.com/watch?v=123asdf") should equal(
+    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?v=123asdf") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl(
-      "http://youtube.com/watch?v=123asdf&;amptime_continue=43") should equal(
+    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?v=123asdf&;amptime_continue=43") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl("notanurl") should equal(
-      "notanurl")
+    OEmbedConverterService.cleanYoutubeRequestUrl("notanurl") should equal("notanurl")
   }
 
   test("removeQueryString should remove the query string from an url") {
-    OEmbedConverterService.removeQueryString(
-      "https://google.com?search=hoho#firsthit") should equal(
+    OEmbedConverterService.removeQueryString("https://google.com?search=hoho#firsthit") should equal(
       "https://google.com#firsthit")
-    OEmbedConverterService.removeQueryString("notanurl") should equal(
-      "notanurl")
+    OEmbedConverterService.removeQueryString("notanurl") should equal("notanurl")
   }
 
-  test(
-    "removeQueryStringAndFragment should remove the query string and fragment from an url") {
-    OEmbedConverterService.removeQueryStringAndFragment(
-      "https://google.com?search=hoho#firsthit") should equal(
+  test("removeQueryStringAndFragment should remove the query string and fragment from an url") {
+    OEmbedConverterService.removeQueryStringAndFragment("https://google.com?search=hoho#firsthit") should equal(
       "https://google.com")
-    OEmbedConverterService.removeQueryStringAndFragment("notanurl") should equal(
-      "notanurl")
+    OEmbedConverterService.removeQueryStringAndFragment("notanurl") should equal("notanurl")
   }
 
 }

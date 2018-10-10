@@ -15,8 +15,7 @@ case class OEmbedProvider(providerName: String,
                           providerUrl: String,
                           endpoints: List[OEmbedEndpoint],
                           urlParser: String => String = identity,
-                          postProcessor: (String, OEmbed) => OEmbed =
-                            (_: String, o: OEmbed) => o) {
+                          postProcessor: (String, OEmbed) => OEmbed = (_: String, o: OEmbed) => o) {
 
   def supports(url: String): Boolean = {
     endpoints.exists(_.supports(url)) || hostMatches(url)
@@ -26,13 +25,10 @@ case class OEmbedProvider(providerName: String,
     Url.parse(url).hostOption == Url.parse(providerUrl).hostOption
   }
 
-  private def _requestUrl(url: String,
-                          maxWidth: Option[String],
-                          maxHeight: Option[String]): String = {
+  private def _requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
     endpoints.find(_.url.isDefined) match {
       case None =>
-        throw new RuntimeException(
-          s"The provider '$providerName' has no embed-url available")
+        throw new RuntimeException(s"The provider '$providerName' has no embed-url available")
       case Some(endpoint) =>
         val embedUrl = endpoint.url.get.replace("{format}", "json") // Some providers have {format} instead of ?format=
         val width = maxWidth.map(("maxwidth", _)).toList
@@ -42,8 +38,6 @@ case class OEmbedProvider(providerName: String,
     }
   }
 
-  def requestUrl(url: String,
-                 maxWidth: Option[String],
-                 maxHeight: Option[String]): String =
+  def requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String =
     _requestUrl(urlParser(url), maxWidth, maxHeight)
 }

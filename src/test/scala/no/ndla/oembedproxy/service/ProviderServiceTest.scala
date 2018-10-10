@@ -19,18 +19,15 @@ import scalaj.http.{Http, HttpRequest}
 
 class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
-  val IncompleteProvider = OEmbedProvider(
-    "gfycat",
-    "https://gfycat.com",
-    List(OEmbedEndpoint(Some(List("http://gfycat.com/*")), None, None, None)))
+  val IncompleteProvider = OEmbedProvider("gfycat",
+                                          "https://gfycat.com",
+                                          List(OEmbedEndpoint(Some(List("http://gfycat.com/*")), None, None, None)))
+
   val CompleteProvider = OEmbedProvider(
     "IFTTT",
     "http://www.ifttt.com",
     List(
-      OEmbedEndpoint(Some(List("http://ifttt.com/recipes/*")),
-                     Some("http://www.ifttt.com/oembed/"),
-                     Some(true),
-                     None)))
+      OEmbedEndpoint(Some(List("http://ifttt.com/recipes/*")), Some("http://www.ifttt.com/oembed/"), Some(true), None)))
 
   override val providerService = new ProviderService
 
@@ -44,9 +41,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That loadProvidersFromRequest does not return an incomplete provider") {
-    when(
-      ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(
-        any[Manifest[List[OEmbedProvider]]]))
+    when(ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(any[Manifest[List[OEmbedProvider]]]))
       .thenReturn(Success(List(IncompleteProvider)))
 
     val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
@@ -54,9 +49,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That loadProvidersFromRequest works for a single provider") {
-    when(
-      ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(
-        any[Manifest[List[OEmbedProvider]]]))
+    when(ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(any[Manifest[List[OEmbedProvider]]]))
       .thenReturn(Success(List(CompleteProvider)))
 
     val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
@@ -64,9 +57,7 @@ class ProviderServiceTest extends UnitSuite with TestEnvironment {
   }
 
   test("That loadProvidersFromRequest only returns the complete provider") {
-    when(
-      ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(
-        any[Manifest[List[OEmbedProvider]]]))
+    when(ndlaClient.fetch[List[OEmbedProvider]](any[HttpRequest])(any[Manifest[List[OEmbedProvider]]]))
       .thenReturn(Success(List(IncompleteProvider, CompleteProvider)))
 
     val providers = providerService.loadProvidersFromRequest(mock[HttpRequest])
