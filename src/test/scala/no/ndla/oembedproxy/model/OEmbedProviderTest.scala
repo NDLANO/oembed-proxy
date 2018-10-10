@@ -34,6 +34,11 @@ class OEmbedProviderTest extends UnitSuite {
     youtubeProvider.hostMatches("https://www.ted.com") should be(right = false)
   }
 
+  test("That hostMatches returns false for nonexistant hosts") {
+    youtubeProvider.copy(providerUrl = "https:///onlypathere").hostMatches("https:///onlypathere") should be(
+      right = false)
+  }
+
   test("That supports returns true when host matches") {
     youtubeProvider.supports("http://www.youtube.com") should be(right = true)
   }
