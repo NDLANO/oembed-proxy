@@ -18,6 +18,8 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       "https://www.youtube.com/watch?start=43&v=vZCsuV7Rb_w"
     val requestUrlWithT =
       "https://www.youtube.com/watch?t=43&v=vZCsuV7Rb_w"
+    val requestUrlWithEnd =
+      "https://www.youtube.com/watch?start=43&end=58&v=vZCsuV7Rb_w"
     val requestUrlWithtoutTimestamp =
       "https://www.youtube.com/watch?v=vZCsuV7Rb_w"
     val oembed = OEmbed(
@@ -39,21 +41,30 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       Some(
         """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
     )
-    val expectedResult = Some(
+    val expectedResultTimeContinue = Some(
+      """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed&time_continue=43" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
+    val expectedResultStart = Some(
       """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed&start=43" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
+    val expectedResultT = Some(
+      """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed&t=43" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
+    val expectedResultStartEnd = Some(
+      """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed&start=43&end=58" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
 
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWIthTimeContinue, oembed)
-      .html should equal(expectedResult)
+      .html should equal(expectedResultTimeContinue)
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithStart, oembed)
-      .html should equal(expectedResult)
+      .html should equal(expectedResultStart)
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithT, oembed)
-      .html should equal(expectedResult)
+      .html should equal(expectedResultT)
     OEmbedConverterService
       .addYoutubeTimestampIfdefinedInRequest(requestUrlWithtoutTimestamp, oembed)
       .html should equal(oembed.html)
+    OEmbedConverterService
+      .addYoutubeTimestampIfdefinedInRequest(requestUrlWithEnd, oembed)
+      .html should equal(expectedResultStartEnd)
   }
 
   test("cleanYoutubeRequestUrl should strip all query params except 'v'") {

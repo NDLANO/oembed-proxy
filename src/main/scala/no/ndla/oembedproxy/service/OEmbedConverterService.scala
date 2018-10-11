@@ -15,7 +15,7 @@ import org.jsoup.Jsoup
 object OEmbedConverterService {
 
   def addYoutubeTimestampIfdefinedInRequest(requestUrl: String, oembed: OEmbed): OEmbed = {
-    val paramTypesToTransfer = List("start", "time_continue", "t", "end") // TODO: Either fix test or convert start, time_continue, t to "start" (probably fix test though)
+    val paramTypesToTransfer = List("start", "time_continue", "t", "end")
     val queryParamsToTransfer = requestUrl.query.filterNames(pn => paramTypesToTransfer.contains(pn)).params
 
     queryParamsToTransfer match {
@@ -32,7 +32,7 @@ object OEmbedConverterService {
             document
               .body()
               .html()
-              .replaceFirst("&amp;", "&") // JSoup escapes & - even in attributes, and there is no way to disable it
+              .replaceAll("&amp;", "&") // JSoup escapes & - even in attributes, and there is no way to disable it
           })
         oembed.copy(html = newHtml)
     }
