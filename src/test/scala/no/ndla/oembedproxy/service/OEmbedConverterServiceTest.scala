@@ -67,7 +67,7 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       .html should equal(expectedResultStartEnd)
   }
 
-  test("That rel=0 also is added to youtube irl if defined in request") {
+  test("That rel=0 also is added to youtube url if defined in request") {
     val requestUrl =
       "https://www.youtube.com/watch?v=vZCsuV7Rb_w&rel=0&time_continue=5&meh=1"
     val oembed = OEmbed(
