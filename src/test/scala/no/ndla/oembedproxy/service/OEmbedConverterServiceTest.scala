@@ -67,6 +67,34 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
       .html should equal(expectedResultStartEnd)
   }
 
+  test("That rel=0 also is added to youtube irl if defined in request") {
+    val requestUrl =
+      "https://www.youtube.com/watch?v=vZCsuV7Rb_w&rel=0&time_continue=5&meh=1"
+    val oembed = OEmbed(
+      "video",
+      "1.0",
+      Some("ESS® expandable sand screen"),
+      None,
+      None,
+      None,
+      Some("Youtube"),
+      Some("https://www.youtube.com"),
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      Some(
+        """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
+    )
+    val expectedResult = Some(
+      """<iframe width="459" height="344" src="https://www.youtube.com/embed/vZCsuV7Rb_w?feature=oembed&rel=0&time_continue=5" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>""")
+
+    OEmbedConverterService.addYoutubeTimestampIfdefinedInRequest(requestUrl, oembed).html should be(expectedResult)
+  }
+
   test("cleanYoutubeRequestUrl should strip all query params except 'v'") {
     OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?start=1&v=123asdf") should equal(
       "http://youtube.com/watch?v=123asdf")
