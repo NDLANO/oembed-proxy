@@ -13,28 +13,31 @@ import io.lemonlabs.uri.dsl._
 import org.jsoup.Jsoup
 
 object OEmbedConverterService {
-  def addYoutubeTimestampIfdefinedInRequest(requestUrl: String,
-                                            oembed: OEmbed): OEmbed = {
-    requestUrl.query
-      .param("start")
-      .orElse(requestUrl.query.param("time_continue"))
-      .orElse(requestUrl.query.param("t")) match {
-      case None => oembed
-      case Some(timestamp) =>
+
+  def addYoutubeTimestampIfdefinedInRequest(requestUrl: String, oembed: OEmbed): OEmbed = {
+    val paramTypesToTransfer = List("start", "time_continue", "t", "end", "rel")
+    val queryParamsToTransfer = requestUrl.query.filterNames(pn => paramTypesToTransfer.contains(pn)).params
+
+    queryParamsToTransfer match {
+      case Vector() => oembed
+      case params =>
         val newHtml = oembed.html
           .map(Jsoup.parseBodyFragment)
           .map(document => {
             Option(document.select("iframe[src]").first)
               .foreach(element => {
-                val newSrcUrl =
-                  element.attr("src").addParam("start", timestamp).toString
-                element.attr("src", newSrcUrl.toString)
+                val newUrl = element.attr("src").addParams(queryParamsToTransfer).toString
+                element.attr("src", newUrl.toString)
               })
-            document.body().html().replaceFirst("&amp;", "&") // JSoup escapes & - even in attributes, and there is no way to disable it
+            document
+              .body()
+              .html()
+              .replaceAll("&amp;", "&") // JSoup escapes & - even in attributes, and there is no way to disable it
           })
         oembed.copy(html = newHtml)
     }
   }
+
   def cleanYoutubeRequestUrl(url: String): String =
     filterQueryNames(url.replaceAll("&amp;", "&"), Set("v"))
 
@@ -44,7 +47,6 @@ object OEmbedConverterService {
   def removeQueryStringAndFragment(url: String): String =
     Url.parse(removeQueryString(url)).withFragment(None)
 
-  private def filterQueryNames(url: String,
-                               allowedQueryParamNames: Set[String]): String =
+  private def filterQueryNames(url: String, allowedQueryParamNames: Set[String]): String =
     Url.parse(url).filterQueryNames(allowedQueryParamNames.contains)
 }

@@ -23,21 +23,19 @@ object OEmbedProxyProperties {
   val ContactEmail = "christergundersen@ndla.no"
   val JSonProviderUrl = "https://oembed.com/providers.json"
   val ProviderListCacheAgeInMs: Long = 1000 * 60 * 60 * 24 // 24 hour caching
-  val ProviderListRetryTimeInMs
-    : Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
+  val ProviderListRetryTimeInMs: Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
 
   val NdlaApiOembedServiceUrl = Map(
     "local" -> "http://ndla-frontend.ndla-local:3000/oembed",
     "prod" -> "https://ndla.no/oembed"
-  ).getOrElse(Environment,
-              s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
+  ).getOrElse(Environment, s"https://ndla-frontend.$Environment.api.ndla.no/oembed")
 
   val NdlaApiOembedProvider = Domain
+
   val NdlaApprovedUrl = Map(
     "local" -> List("http://api-gateway.ndla-local:30017/*"),
     "prod" -> List("https?://ndla.no/*", "https?://beta.ndla.no/*")
-  ).getOrElse(Environment,
-              List(s"https?://ndla-frontend.$Environment.api.ndla.no/*"))
+  ).getOrElse(Environment, List(s"https?://ndla-frontend.$Environment.api.ndla.no/*"))
 
   val NdlaH5POembedProvider = Map(
     "brukertest" -> "https://h5p.ndla.no",
@@ -45,6 +43,7 @@ object OEmbedProxyProperties {
     "staging" -> "https://h5p.ndla.no",
     "prod" -> "https://h5p.ndla.no"
   ).getOrElse(Environment, "https://h5p-test.ndla.no")
+
   val NdlaH5PApprovedUrl = Map(
     "brukertest" -> "https://h5p.ndla.no/resource/*",
     "spoletest" -> "https://h5p.ndla.no/resource/*",

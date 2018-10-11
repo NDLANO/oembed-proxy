@@ -11,20 +11,15 @@ package no.ndla.oembedproxy.caching
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
 import com.typesafe.scalalogging.LazyLogging
-import no.ndla.oembedproxy.OEmbedProxyProperties.{
-  ProviderListCacheAgeInMs,
-  ProviderListRetryTimeInMs
-}
+import no.ndla.oembedproxy.OEmbedProxyProperties.{ProviderListCacheAgeInMs, ProviderListRetryTimeInMs}
 import no.ndla.oembedproxy.model.DoNotUpdateMemoizeException
 
-class Memoize[R](maxCacheAgeMs: Long,
-                 retryTimeInMs: Long,
-                 f: () => R,
-                 autoRefreshCache: Boolean)
+class Memoize[R](maxCacheAgeMs: Long, retryTimeInMs: Long, f: () => R, autoRefreshCache: Boolean)
     extends (() => R)
     with LazyLogging {
 
   case class CacheValue(value: R, lastUpdated: Long) {
+
     def isExpired: Boolean =
       lastUpdated + maxCacheAgeMs <= System.currentTimeMillis()
   }
@@ -64,17 +59,13 @@ class Memoize[R](maxCacheAgeMs: Long,
 }
 
 object Memoize {
+
   def apply[R](f: () => R) =
-    new Memoize(ProviderListCacheAgeInMs,
-                ProviderListRetryTimeInMs,
-                f,
-                autoRefreshCache = false)
+    new Memoize(ProviderListCacheAgeInMs, ProviderListRetryTimeInMs, f, autoRefreshCache = false)
 }
 
 object MemoizeAutoRenew {
+
   def apply[R](f: () => R) =
-    new Memoize(ProviderListCacheAgeInMs,
-                ProviderListRetryTimeInMs,
-                f,
-                autoRefreshCache = true)
+    new Memoize(ProviderListCacheAgeInMs, ProviderListRetryTimeInMs, f, autoRefreshCache = true)
 }

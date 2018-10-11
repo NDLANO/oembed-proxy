@@ -42,6 +42,7 @@ trait OEmbedProxyController {
     val response400 = ResponseMessage(400, "Validation error", Some("Error"))
     val response401 = ResponseMessage(401, "Unauthorized")
     val response500 = ResponseMessage(500, "Unknown error", Some("Error"))
+
     val response501 =
       ResponseMessage(501, "Provider Not Supported", Some("Error"))
     val response502 = ResponseMessage(502, "Bad Gateway", Some("Error"))
@@ -77,11 +78,9 @@ trait OEmbedProxyController {
 
     error {
       case pme: ParameterMissingException =>
-        halt(status = 400,
-             body = Error(Error.PARAMETER_MISSING, pme.getMessage))
+        halt(status = 400, body = Error(Error.PARAMETER_MISSING, pme.getMessage))
       case pnse: ProviderNotSupportedException =>
-        halt(status = 501,
-             body = Error(Error.PROVIDER_NOT_SUPPORTED, pnse.getMessage))
+        halt(status = 501, body = Error(Error.PROVIDER_NOT_SUPPORTED, pnse.getMessage))
       case hre: HttpRequestException =>
         halt(status = 502, body = Error(Error.REMOTE_ERROR, hre.getMessage))
       case t: Throwable => {
@@ -110,8 +109,7 @@ trait OEmbedProxyController {
 
       params.get(urlParam.paramName) match {
         case None =>
-          throw new ParameterMissingException(
-            s"The required parameter '${urlParam.paramName}' is missing.")
+          throw new ParameterMissingException(s"The required parameter '${urlParam.paramName}' is missing.")
         case Some(url) =>
           oEmbedService.get(url, maxWidth, maxHeight) match {
             case Success(oembed) => oembed

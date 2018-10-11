@@ -8,12 +8,11 @@
 
 package no.ndla.oembedproxy.model
 
-case class OEmbedEndpoint(
-    schemes: Option[List[String]],
-    url: Option[String],
-    discovery: Option[Boolean],
-    formats: Option[List[String]],
-    mandatoryQueryParams: List[(String, String)] = List()) {
+case class OEmbedEndpoint(schemes: Option[List[String]],
+                          url: Option[String],
+                          discovery: Option[Boolean],
+                          formats: Option[List[String]],
+                          mandatoryQueryParams: List[(String, String)] = List()) {
 
   def supports(url: String): Boolean = {
     schemes match {

@@ -14,11 +14,8 @@ import org.scalatra.LifeCycle
 class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
-    context.mount(ComponentRegistry.oEmbedProxyController,
-                  OEmbedProxyProperties.OembedProxyControllerMountPoint)
-    context.mount(ComponentRegistry.resourcesApp,
-                  OEmbedProxyProperties.ResourcesAppMountPoint)
-    context.mount(ComponentRegistry.healthController,
-                  OEmbedProxyProperties.HealthControllerMountPoint)
+    context.mount(ComponentRegistry.oEmbedProxyController, OEmbedProxyProperties.OembedProxyControllerMountPoint)
+    context.mount(ComponentRegistry.resourcesApp, OEmbedProxyProperties.ResourcesAppMountPoint)
+    context.mount(ComponentRegistry.healthController, OEmbedProxyProperties.HealthControllerMountPoint)
   }
 }

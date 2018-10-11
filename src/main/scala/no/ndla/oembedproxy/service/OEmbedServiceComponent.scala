@@ -10,11 +10,7 @@ package no.ndla.oembedproxy.service
 
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
-import no.ndla.oembedproxy.model.{
-  OEmbed,
-  OEmbedProvider,
-  ProviderNotSupportedException
-}
+import no.ndla.oembedproxy.model.{OEmbed, OEmbedProvider, ProviderNotSupportedException}
 
 import scala.util.{Failure, Try}
 import scalaj.http.{Http, HttpOptions}
@@ -31,27 +27,21 @@ trait OEmbedServiceComponent extends LazyLogging {
     private def getProvider(url: String): Option[OEmbedProvider] =
       providers.find(_.supports(url))
 
-    private def fetchOembedFromProvider(
-        provider: OEmbedProvider,
-        url: String,
-        maxWidth: Option[String],
-        maxHeight: Option[String]): Try[OEmbed] = {
+    private def fetchOembedFromProvider(provider: OEmbedProvider,
+                                        url: String,
+                                        maxWidth: Option[String],
+                                        maxHeight: Option[String]): Try[OEmbed] = {
       ndlaClient.fetch[OEmbed](
         Http(provider.requestUrl(url, maxWidth, maxHeight))
           .option(HttpOptions.followRedirects(true)))
     }
 
-    def get(url: String,
-            maxWidth: Option[String],
-            maxHeight: Option[String]): Try[OEmbed] = {
+    def get(url: String, maxWidth: Option[String], maxHeight: Option[String]): Try[OEmbed] = {
       getProvider(url) match {
         case None =>
-          Failure(
-            ProviderNotSupportedException(
-              s"Could not find an oembed-provider for the url '$url'"))
+          Failure(ProviderNotSupportedException(s"Could not find an oembed-provider for the url '$url'"))
         case Some(provider) =>
-          fetchOembedFromProvider(provider, url, maxWidth, maxHeight).map(
-            provider.postProcessor(url, _))
+          fetchOembedFromProvider(provider, url, maxWidth, maxHeight).map(provider.postProcessor(url, _))
       }
     }
 
