@@ -95,14 +95,21 @@ class OEmbedConverterServiceTest extends UnitSuite with TestEnvironment {
     OEmbedConverterService.addYoutubeTimestampIfdefinedInRequest(requestUrl, oembed).html should be(expectedResult)
   }
 
-  test("cleanYoutubeRequestUrl should strip all query params except 'v'") {
-    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?start=1&v=123asdf") should equal(
+  test("handleYoutubeRequestUrl should strip all query params except 'v'") {
+    OEmbedConverterService.handleYoutubeRequestUrl("http://youtube.com/watch?start=1&v=123asdf") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?v=123asdf") should equal(
+    OEmbedConverterService.handleYoutubeRequestUrl("http://youtube.com/watch?v=123asdf") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl("http://youtube.com/watch?v=123asdf&;amptime_continue=43") should equal(
+    OEmbedConverterService.handleYoutubeRequestUrl("http://youtube.com/watch?v=123asdf&;amptime_continue=43") should equal(
       "http://youtube.com/watch?v=123asdf")
-    OEmbedConverterService.cleanYoutubeRequestUrl("notanurl") should equal("notanurl")
+    OEmbedConverterService.handleYoutubeRequestUrl("notanurl") should equal("notanurl")
+  }
+
+  test("handleYoutubeRequestUrl should convert /embed and /v urls to youtu.be") {
+    OEmbedConverterService.handleYoutubeRequestUrl("http://youtube.com/embed/123asdf") should equal(
+      "https://youtu.be/123asdf")
+    OEmbedConverterService.handleYoutubeRequestUrl("http://youtube.com/v/123asdf") should equal(
+      "https://youtu.be/123asdf")
   }
 
   test("removeQueryString should remove the query string from an url") {

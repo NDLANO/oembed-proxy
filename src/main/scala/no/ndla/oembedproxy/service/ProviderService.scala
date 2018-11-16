@@ -17,7 +17,7 @@ import no.ndla.oembedproxy.service.OEmbedConverterService.{
   addYoutubeTimestampIfdefinedInRequest,
   removeQueryString,
   removeQueryStringAndFragment,
-  cleanYoutubeRequestUrl
+  handleYoutubeRequestUrl
 }
 import org.json4s.DefaultFormats
 
@@ -64,13 +64,13 @@ trait ProviderService {
     val YoutuProvider = OEmbedProvider("YouTube",
                                        "http://youtu.be",
                                        List(YoutubeEndpoint),
-                                       cleanYoutubeRequestUrl,
+                                       handleYoutubeRequestUrl,
                                        addYoutubeTimestampIfdefinedInRequest)
 
     val YoutubeProvider = OEmbedProvider("YouTube",
                                          "http://www.youtube.com",
                                          List(YoutubeEndpoint),
-                                         cleanYoutubeRequestUrl,
+                                         handleYoutubeRequestUrl,
                                          addYoutubeTimestampIfdefinedInRequest)
 
     val H5PApprovedUrls = List(OEmbedProxyProperties.NdlaH5PApprovedUrl)

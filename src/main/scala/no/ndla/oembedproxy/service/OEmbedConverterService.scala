@@ -38,8 +38,17 @@ object OEmbedConverterService {
     }
   }
 
-  def cleanYoutubeRequestUrl(url: String): String =
-    filterQueryNames(url.replaceAll("&amp;", "&"), Set("v"))
+  def handleYoutubeRequestUrl(url: String): String = {
+    val filtered = filterQueryNames(url.replaceAll("&amp;", "&"), Set("v"))
+
+    filtered.path.parts.toList match {
+      case "embed" :: videoId :: tail => idToYoutubeUrl(videoId)
+      case "v" :: videoId :: tail     => idToYoutubeUrl(videoId)
+      case _                          => filtered
+    }
+  }
+
+  def idToYoutubeUrl(videoId: String): String = s"https://youtu.be/$videoId"
 
   def removeQueryString(url: String): String =
     Url.parse(url).removeQueryString()
