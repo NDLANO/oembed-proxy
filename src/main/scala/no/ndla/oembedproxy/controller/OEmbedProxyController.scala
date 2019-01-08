@@ -90,20 +90,21 @@ trait OEmbedProxyController {
       }
     }
 
-    val oEmbed =
-      (apiOperation[OEmbed]("oembed")
-        summary "Returns oEmbed information for a given url"
-        notes "Returns oEmbed information for a given url"
-        parameters (
-          asHeaderParam[Option[String]](correlationId),
-          asQueryParam[String](urlParam),
-          asQueryParam[Option[String]](maxWidth),
-          asQueryParam[Option[String]](maxHeight)
+    get(
+      "/",
+      operation(
+        apiOperation[OEmbed]("oembed")
+          summary "Returns oEmbed information for a given url."
+          notes "Returns oEmbed information for a given url."
+          parameters (
+            asHeaderParam[Option[String]](correlationId),
+            asQueryParam[String](urlParam),
+            asQueryParam[Option[String]](maxWidth),
+            asQueryParam[Option[String]](maxHeight)
+        )
+          responseMessages (response400, response401, response500, response501, response502)
       )
-        authorizations "oauth2"
-        responseMessages (response400, response401, response500, response501, response502))
-
-    get("/", operation(oEmbed)) {
+    ) {
       val maxWidth = params.get(this.maxWidth.paramName)
       val maxHeight = params.get(this.maxHeight.paramName)
 
