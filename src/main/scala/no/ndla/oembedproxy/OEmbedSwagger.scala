@@ -21,8 +21,8 @@ object OEmbedProxyInfo {
 
   val apiInfo = ApiInfo(
     "OEmbed Proxy",
-    "Service for fetching OEmbed information",
-    "http://ndla.no",
+    "Convert any NDLA resource to an oEmbed embeddable resource.",
+    "https://om.ndla.no/terms",
     OEmbedProxyProperties.ContactEmail,
     "GPL v3.0",
     "http://www.gnu.org/licenses/gpl-3.0.en.html"
