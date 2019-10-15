@@ -41,7 +41,7 @@ object OEmbedProxyProperties {
     "brukertest" -> "https://h5p.ndla.no",
     "spoletest" -> "https://h5p.ndla.no",
     "staging" -> "https://h5p.ndla.no",
-    "prod" -> "https://h5p.ndla.no"
+    "prod" -> "https://h5p.ndla.no",
     "ff" -> "https://h5p-ff.ndla.no"
   ).getOrElse(Environment, "https://h5p-test.ndla.no")
 
@@ -49,7 +49,7 @@ object OEmbedProxyProperties {
     "brukertest" -> "https://h5p.ndla.no/resource/*",
     "spoletest" -> "https://h5p.ndla.no/resource/*",
     "staging" -> "https://h5p.ndla.no/resource/*",
-    "prod" -> "https://h5p.ndla.no/resource/*"
+    "prod" -> "https://h5p.ndla.no/resource/*",
     "ff" -> "https://h5p-ff.ndla.no/resource/*"
   ).getOrElse(Environment, "https://h5p-test.ndla.no/resource/*")
 
