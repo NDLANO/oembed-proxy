@@ -22,7 +22,9 @@ case class OEmbedProvider(providerName: String,
   }
 
   def hostMatches(url: String): Boolean = {
-    url.hostOption.exists(providerUrl.hostOption.contains)
+    val urlHost = url.hostOption.filter(_.toString != "")
+    val providerHost = providerUrl.hostOption.filter(_.toString != "")
+    urlHost.exists(providerHost.contains)
   }
 
   private def _requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
