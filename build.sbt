@@ -1,13 +1,14 @@
 import java.util.Properties
 
-val Scalaversion = "2.12.6"
+val Scalaversion = "2.12.10"
 val Scalatraversion = "2.5.1"
-val ScalaLoggingVersion = "3.5.0"
+val ScalaLoggingVersion = "3.9.0"
 val Log4JVersion = "2.11.0"
-val JacksonVersion = "2.9.9.3"
+val JacksonVersion = "2.9.10.1"
 val Jettyversion = "9.4.18.v20190429"
-val ScalaTestVersion = "3.0.1"
+val ScalaTestVersion = "3.0.5"
 val MockitoVersion = "1.10.19"
+val Json4SVersion = "3.6.7"
 
 val appProperties = settingKey[Properties]("The application properties")
 
@@ -38,10 +39,10 @@ lazy val oembed_proxy = (project in file("."))
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
-      "org.json4s" %% "json4s-native" % "3.5.0",
+      "org.json4s" %% "json4s-native" % Json4SVersion,
       "org.scalatra" %% "scalatra-swagger" % Scalatraversion,
       "org.scalaj" %% "scalaj-http" % "2.3.0",
-      "io.lemonlabs" %% "scala-uri" % "1.3.1",
+      "io.lemonlabs" %% "scala-uri" % "1.5.1",
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
       "org.mockito" % "mockito-all" % MockitoVersion % "test"
