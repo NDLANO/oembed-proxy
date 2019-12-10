@@ -36,8 +36,9 @@ object OEmbedProxyProperties {
 
   val NdlaApprovedUrl = Map(
     "local" -> List("http://api-gateway.ndla-local:30017/*"),
-    "prod" -> List("https?://ndla.no/*")
-  ).getOrElse(Environment, List(s"https?://$Environment.ndla.no/*"))
+    "prod" -> List("https?://www.ndla.no/*", "https?://ndla.no/*", "https?://beta.ndla.no/*")
+  ).getOrElse(Environment,
+              List(s"https?://ndla-frontend.$Environment.api.ndla.no/*", s"https?://$Environment.ndla.no/*"))
 
   val NdlaH5POembedProvider = Map(
     "brukertest" -> "https://h5p.ndla.no",
