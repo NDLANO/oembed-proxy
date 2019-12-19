@@ -12,7 +12,7 @@ import no.ndla.network.model.HttpRequestException
 import no.ndla.oembedproxy.caching.Memoize
 import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.{TestEnvironment, UnitSuite}
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.mockito.Mockito._
 import org.scalatest.TryValues._
 
