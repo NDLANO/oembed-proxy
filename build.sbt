@@ -37,6 +37,7 @@ lazy val oembed_proxy = (project in file("."))
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.10.1",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s" %% "json4s-native" % Json4SVersion,
@@ -45,7 +46,7 @@ lazy val oembed_proxy = (project in file("."))
       "io.lemonlabs" %% "scala-uri" % "1.5.1",
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test"
+      "org.mockito" % "mockito-core" % MockitoVersion % "test"
     )
   )
   .enablePlugins(DockerPlugin)
