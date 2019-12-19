@@ -95,7 +95,7 @@ trait OEmbedProxyController {
       operation(
         apiOperation[OEmbed]("oembed")
           summary "Returns oEmbed information for a given url."
-          notes "Returns oEmbed information for a given url."
+          description "Returns oEmbed information for a given url."
           parameters (
             asHeaderParam[Option[String]](correlationId),
             asQueryParam[String](urlParam),
