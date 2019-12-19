@@ -1,13 +1,13 @@
 import java.util.Properties
 
 val Scalaversion = "2.12.10"
-val Scalatraversion = "2.5.1"
+val Scalatraversion = "2.6.5"
 val ScalaLoggingVersion = "3.9.0"
-val Log4JVersion = "2.11.0"
+val Log4JVersion = "2.11.1"
 val JacksonVersion = "2.9.10.1"
 val Jettyversion = "9.4.18.v20190429"
 val ScalaTestVersion = "3.0.5"
-val MockitoVersion = "1.10.19"
+val MockitoVersion = "2.23.0"
 val Json4SVersion = "3.6.7"
 
 val appProperties = settingKey[Properties]("The application properties")
@@ -25,7 +25,7 @@ lazy val oembed_proxy = (project in file("."))
     version := appProperties.value.getProperty("NDLAComponentVersion"),
     scalaVersion := Scalaversion,
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-    scalacOptions := Seq("-target:jvm-1.8"),
+    scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
       "ndla" %% "network" % "0.42",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
@@ -37,6 +37,7 @@ lazy val oembed_proxy = (project in file("."))
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.10.1",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s" %% "json4s-native" % Json4SVersion,
@@ -45,7 +46,7 @@ lazy val oembed_proxy = (project in file("."))
       "io.lemonlabs" %% "scala-uri" % "1.5.1",
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.mockito" % "mockito-all" % MockitoVersion % "test"
+      "org.mockito" % "mockito-core" % MockitoVersion % "test"
     )
   )
   .enablePlugins(DockerPlugin)
@@ -92,8 +93,8 @@ docker / dockerfile := {
   val artifact = (assembly / assemblyOutputPath).value
   val artifactTargetPath = s"/app/${artifact.name}"
   new Dockerfile {
-    from("openjdk:8-jre-alpine")
-
+    from("adoptopenjdk/openjdk11:alpine-slim")
+    run("apk", "--no-cache", "add", "ttf-dejavu")
     add(artifact, artifactTargetPath)
     entryPoint("java", "-Dorg.scalatra.environment=production", "-jar", artifactTargetPath)
   }

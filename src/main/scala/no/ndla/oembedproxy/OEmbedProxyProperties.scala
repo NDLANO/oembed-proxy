@@ -13,14 +13,14 @@ import scala.util.Properties.envOrNone
 
 object OEmbedProxyProperties {
 
-  val Auth0LoginEndpoint =
-    s"https://${AuthUser.getAuth0HostForEnv(Environment)}/authorize"
-
   val ApplicationPort = propOrElse("APPLICATION_PORT", "80").toInt
 
   val CorrelationIdKey = "correlationID"
   val CorrelationIdHeader = "X-Correlation-ID"
   val Environment = propOrElse("NDLA_ENVIRONMENT", "local")
+
+  val Auth0LoginEndpoint =
+    s"https://${AuthUser.getAuth0HostForEnv(Environment)}/authorize"
 
   val ContactEmail = "support+api@ndla.no"
   val JSonProviderUrl = "https://oembed.com/providers.json"

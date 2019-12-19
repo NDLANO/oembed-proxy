@@ -9,7 +9,7 @@
 package no.ndla.oembedproxy
 
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 
 abstract class UnitSuite
     extends FunSuite
