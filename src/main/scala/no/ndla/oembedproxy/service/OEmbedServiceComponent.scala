@@ -22,6 +22,8 @@ trait OEmbedServiceComponent extends LazyLogging {
   class OEmbedService(optionalProviders: Option[List[OEmbedProvider]] = None) {
     implicit val formats = org.json4s.DefaultFormats
 
+    val remoteTimeout = 10 * 1000 // 10 Seconds
+
     private lazy val providers = optionalProviders.toList.flatten ++ providerService
       .loadProviders()
     private def getProvider(url: String): Option[OEmbedProvider] =
@@ -33,7 +35,9 @@ trait OEmbedServiceComponent extends LazyLogging {
                                         maxHeight: Option[String]): Try[OEmbed] = {
       ndlaClient.fetch[OEmbed](
         Http(provider.requestUrl(url, maxWidth, maxHeight))
-          .option(HttpOptions.followRedirects(true)))
+          .option(HttpOptions.followRedirects(true))
+          .timeout(remoteTimeout, remoteTimeout)
+      )
     }
 
     def get(url: String, maxWidth: Option[String], maxHeight: Option[String]): Try[OEmbed] = {

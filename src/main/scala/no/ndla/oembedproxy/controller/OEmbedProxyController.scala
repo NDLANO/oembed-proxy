@@ -15,7 +15,7 @@ import no.ndla.oembedproxy.model._
 import no.ndla.oembedproxy.service.OEmbedServiceComponent
 import org.json4s.ext.EnumNameSerializer
 import org.json4s.{DefaultFormats, Formats}
-import org.scalatra.ScalatraServlet
+import org.scalatra.{BadGateway, BadRequest, InternalServerError, NotImplemented, ScalatraServlet}
 import org.scalatra.json.NativeJsonSupport
 import org.scalatra.swagger.{ResponseMessage, Swagger, SwaggerSupport}
 import org.scalatra.util.NotNothing
@@ -78,16 +78,18 @@ trait OEmbedProxyController {
 
     error {
       case pme: ParameterMissingException =>
-        halt(status = 400, body = Error(Error.PARAMETER_MISSING, pme.getMessage))
+        BadRequest(Error(Error.PARAMETER_MISSING, pme.getMessage))
       case pnse: ProviderNotSupportedException =>
-        halt(status = 501, body = Error(Error.PROVIDER_NOT_SUPPORTED, pnse.getMessage))
+        NotImplemented(Error(Error.PROVIDER_NOT_SUPPORTED, pnse.getMessage))
       case hre: HttpRequestException =>
-        logger.error(s"Could not fetch remote: '${hre.getMessage}'", hre)
-        halt(status = 502, body = Error(Error.REMOTE_ERROR, hre.getMessage))
+        val msg = hre.httpResponse.map(response =>
+          s": Received '${response.code}' '${response.statusLine}'. Body was '${response.body}'")
+        logger.error(s"Could not fetch remote: '${hre.getMessage}'${msg.getOrElse("")}", hre)
+        BadGateway(Error(Error.REMOTE_ERROR, hre.getMessage))
       case t: Throwable => {
         t.printStackTrace()
         logger.error(t.getMessage)
-        halt(status = 500, body = Error.GenericError)
+        InternalServerError(Error.GenericError)
       }
     }
 
@@ -111,11 +113,11 @@ trait OEmbedProxyController {
 
       params.get(urlParam.paramName) match {
         case None =>
-          throw new ParameterMissingException(s"The required parameter '${urlParam.paramName}' is missing.")
+          errorHandler(new ParameterMissingException(s"The required parameter '${urlParam.paramName}' is missing."))
         case Some(url) =>
           oEmbedService.get(url, maxWidth, maxHeight) match {
             case Success(oembed) => oembed
-            case Failure(ex)     => throw ex
+            case Failure(ex)     => errorHandler(ex)
           }
       }
     }
