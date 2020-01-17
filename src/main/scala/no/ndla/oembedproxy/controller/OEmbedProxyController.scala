@@ -82,8 +82,8 @@ trait OEmbedProxyController {
       case pnse: ProviderNotSupportedException =>
         halt(status = 501, body = Error(Error.PROVIDER_NOT_SUPPORTED, pnse.getMessage))
       case hre: HttpRequestException =>
-        halt(status = 502, body = Error(Error.REMOTE_ERROR, hre.getMessage))
         logger.error(s"Could not fetch remote: '${hre.getMessage}'", hre)
+        halt(status = 502, body = Error(Error.REMOTE_ERROR, hre.getMessage))
       case t: Throwable => {
         t.printStackTrace()
         logger.error(t.getMessage)
