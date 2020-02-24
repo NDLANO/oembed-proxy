@@ -55,7 +55,8 @@ lazy val oembed_proxy = (project in file("."))
 assembly / assemblyJarName := "oembed-proxy.jar"
 assembly / mainClass := Some("no.ndla.oembedproxy.JettyLauncher")
 assembly / assemblyMergeStrategy := {
-  case "mime.types" => MergeStrategy.filterDistinctLines
+  case "module-info.class" => MergeStrategy.discard
+  case "mime.types"        => MergeStrategy.filterDistinctLines
   case PathList("org", "joda", "convert", "ToString.class") =>
     MergeStrategy.first
   case PathList("org", "joda", "convert", "FromString.class") =>
