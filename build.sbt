@@ -1,13 +1,13 @@
 import java.util.Properties
 
-val Scalaversion = "2.12.10"
-val Scalatraversion = "2.6.5"
-val ScalaLoggingVersion = "3.9.0"
+val Scalaversion = "2.13.1"
+val Scalatraversion = "2.7.0"
+val ScalaLoggingVersion = "3.9.2"
 val Log4JVersion = "2.11.1"
 val JacksonVersion = "2.10.2"
-val Jettyversion = "9.4.18.v20190429"
-val ScalaTestVersion = "3.0.5"
-val MockitoVersion = "2.23.0"
+val Jettyversion = "9.4.27.v20200227"
+val ScalaTestVersion = "3.1.1"
+val MockitoVersion = "1.11.4"
 val Json4SVersion = "3.6.7"
 
 val appProperties = settingKey[Properties]("The application properties")
@@ -27,7 +27,7 @@ lazy val oembed_proxy = (project in file("."))
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.42",
+      "ndla" %% "network" % "0.43",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
@@ -42,11 +42,12 @@ lazy val oembed_proxy = (project in file("."))
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s" %% "json4s-native" % Json4SVersion,
       "org.scalatra" %% "scalatra-swagger" % Scalatraversion,
-      "org.scalaj" %% "scalaj-http" % "2.3.0",
+      "org.scalaj" %% "scalaj-http" % "2.4.2",
       "io.lemonlabs" %% "scala-uri" % "1.5.1",
       "org.jsoup" % "jsoup" % "1.11.3",
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-      "org.mockito" % "mockito-core" % MockitoVersion % "test"
+      "org.mockito" %% "mockito-scala" % MockitoVersion % "test",
+      "org.mockito" %% "mockito-scala-scalatest" % MockitoVersion % "test"
     )
   )
   .enablePlugins(DockerPlugin)

@@ -19,13 +19,23 @@ class ResourcesApp(implicit val swagger: Swagger) extends ScalatraServlet with N
 
 object OEmbedProxyInfo {
 
+  val contactInfo = ContactInfo(
+    "NDLA",
+    "ndla.no",
+    OEmbedProxyProperties.ContactEmail
+  )
+
+  val licenseInfo = LicenseInfo(
+    "GPL v3.0",
+    "http://www.gnu.org/licenses/gpl-3.0.en.html"
+  )
+
   val apiInfo = ApiInfo(
     "OEmbed Proxy",
     "Convert any NDLA resource to an oEmbed embeddable resource.",
     "https://om.ndla.no/tos",
-    OEmbedProxyProperties.ContactEmail,
-    "GPL v3.0",
-    "http://www.gnu.org/licenses/gpl-3.0.en.html"
+    contactInfo,
+    licenseInfo
   )
 }
 

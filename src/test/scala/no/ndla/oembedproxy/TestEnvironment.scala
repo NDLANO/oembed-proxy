@@ -12,7 +12,7 @@ import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.controller.{HealthController, OEmbedProxyController}
 import no.ndla.oembedproxy.service.{OEmbedServiceComponent, ProviderService}
 import org.mockito.Mockito
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.scalatest.MockitoSugar
 
 trait TestEnvironment
     extends OEmbedProxyController
