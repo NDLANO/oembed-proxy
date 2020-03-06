@@ -8,11 +8,13 @@
 
 package no.ndla.oembedproxy
 
+import org.mockito.scalatest.MockitoSugar
 import org.scalatest._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 abstract class UnitSuite
-    extends FunSuite
+    extends AnyFunSuite
     with Matchers
     with OptionValues
     with Inside

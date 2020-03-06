@@ -21,7 +21,7 @@ object JettyLauncher extends LazyLogging {
     ComponentRegistry.providerService.loadProviders()
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     logger.info(
       Source
         .fromInputStream(getClass.getResourceAsStream("/log-license.txt"))

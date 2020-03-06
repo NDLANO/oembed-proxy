@@ -63,7 +63,7 @@ class MemoizeTest extends UnitSuite {
 
     when(targetMock.targetMethod())
       .thenReturn("Hello from mock")
-      .thenThrow(new DoNotUpdateMemoizeException("Woop"))
+      .andThenThrow(new DoNotUpdateMemoizeException("Woop"))
 
     memoizedTarget() should equal("Hello from mock")
     Thread.sleep(cacheMaxAgeInMs)
