@@ -41,17 +41,13 @@ object OEmbedProxyProperties {
               List(s"https?://ndla-frontend.$Environment.api.ndla.no/*", s"https?://$Environment.ndla.no/*"))
 
   val NdlaH5POembedProvider = Map(
-    "brukertest" -> "https://h5p.ndla.no",
-    "spoletest" -> "https://h5p.ndla.no",
-    "staging" -> "https://h5p.ndla.no",
+    "staging" -> "https://h5p-staging.ndla.no",
     "prod" -> "https://h5p.ndla.no",
     "ff" -> "https://h5p-ff.ndla.no"
   ).getOrElse(Environment, "https://h5p-test.ndla.no")
 
   val NdlaH5PApprovedUrl = Map(
-    "brukertest" -> "https://h5p.ndla.no/resource/*",
-    "spoletest" -> "https://h5p.ndla.no/resource/*",
-    "staging" -> "https://h5p.ndla.no/resource/*",
+    "staging" -> "https://h5p-staging.ndla.no/resource/*",
     "prod" -> "https://h5p.ndla.no/resource/*",
     "ff" -> "https://h5p-ff.ndla.no/resource/*"
   ).getOrElse(Environment, "https://h5p-test.ndla.no/resource/*")
