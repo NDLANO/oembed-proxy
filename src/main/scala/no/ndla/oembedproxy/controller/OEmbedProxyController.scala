@@ -17,7 +17,7 @@ import org.json4s.ext.EnumNameSerializer
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.{BadGateway, BadRequest, InternalServerError, NotImplemented, ScalatraServlet}
 import org.scalatra.json.NativeJsonSupport
-import org.scalatra.swagger.{ResponseMessage, Swagger, SwaggerSupport}
+import org.scalatra.swagger.{ResponseMessage, Swagger, SwaggerSupport, SwaggerSupportSyntax}
 import org.scalatra.util.NotNothing
 
 import scala.util.{Failure, Success}
@@ -58,9 +58,9 @@ trait OEmbedProxyController {
     private val maxHeight =
       Param("maxheight", "The maximum height of the embedded resource")
 
-    protected def asQueryParam[T: Manifest: NotNothing](param: Param) =
+    protected def asQueryParam[T: Manifest: NotNothing](param: Param): SwaggerSupportSyntax.ParameterBuilder[T] =
       queryParam[T](param.paramName).description(param.description)
-    protected def asHeaderParam[T: Manifest: NotNothing](param: Param) =
+    protected def asHeaderParam[T: Manifest: NotNothing](param: Param): SwaggerSupportSyntax.ParameterBuilder[T] =
       headerParam[T](param.paramName).description(param.description)
 
     before() {
@@ -97,15 +97,15 @@ trait OEmbedProxyController {
       "/",
       operation(
         apiOperation[OEmbed]("oembed")
-          summary "Returns oEmbed information for a given url."
-          description "Returns oEmbed information for a given url."
-          parameters (
+          .summary("Returns oEmbed information for a given url.")
+          .description("Returns oEmbed information for a given url.")
+          .parameters(
             asHeaderParam[Option[String]](correlationId),
             asQueryParam[String](urlParam),
             asQueryParam[Option[String]](maxWidth),
             asQueryParam[Option[String]](maxHeight)
-        )
-          responseMessages (response400, response401, response500, response501, response502)
+          )
+          .responseMessages(response400, response401, response500, response501, response502)
       )
     ) {
       val maxWidth = params.get(this.maxWidth.paramName)
