@@ -79,7 +79,20 @@ trait ProviderService {
       OEmbedEndpoint(Some(H5PApprovedUrls), Some(s"${OEmbedProxyProperties.NdlaH5POembedProvider}/oembed"), None, None)
     val H5PProvider = OEmbedProvider("H5P", OEmbedProxyProperties.NdlaH5POembedProvider, List(H5PEndpoint))
 
-    val TedApprovedUrls = List("https://www.ted.com/talks/*")
+    val TedApprovedUrls = List(
+      "https://www.ted.com/talks/*",
+      "http://www.ted.com/talks/*",
+      "https://ted.com/talks/*",
+      "http://ted.com/talks/*",
+      "www.ted.com/talks/*",
+      "ted.com/talks/*",
+      "https://www.embed.ted.com/talks/*",
+      "http://www.embed.ted.com/talks/*",
+      "https://embed.ted.com/talks/*",
+      "http://embed.ted.com/talks/*",
+      "www.embed.ted.com/talks/*",
+      "embed.ted.com/talks/*"
+    )
     val TedEndpoint = OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/talks/oembed.json"), None, None)
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), removeQueryString)
 
