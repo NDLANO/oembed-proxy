@@ -93,7 +93,9 @@ trait ProviderService {
       "www.embed.ted.com/talks/*",
       "embed.ted.com/talks/*"
     )
-    val TedEndpoint = OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/services/v1/oembed.json"), None, None)
+
+    val TedEndpoint =
+      OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/services/v1/oembed.json"), None, None)
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), removeQueryString)
 
     val IssuuApprovedUrls = List("http://issuu.com/*", "https://issuu.com/*")
