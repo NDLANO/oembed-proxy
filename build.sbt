@@ -20,7 +20,8 @@ appProperties := {
 
 // Sometimes we override transitive dependencies because of vulnerabilities, we put these here
 val vulnerabilityOverrides = Seq(
-  "org.apache.httpcomponents" % "httpclient" % "4.5.13"
+  "org.apache.httpcomponents" % "httpclient" % "4.5.13",
+  "commons-codec" % "commons-codec" % "1.14"
 )
 
 lazy val oembed_proxy = (project in file("."))
