@@ -32,10 +32,20 @@ object OEmbedProxyProperties {
     "prod" -> "https://ndla.no/oembed"
   ).getOrElse(Environment, s"https://$Environment.ndla.no/oembed")
 
+  val ListingFrontendOembedServiceUrl = Map(
+    "local" -> "http://localhost:30020/oembed",
+    "prod" -> "https://liste.ndla.no/oembed"
+  ).getOrElse(Environment, s"https://liste.$Environment.ndla.no/oembed")
+
+  val ListingFrontendApprovedUrls = Map(
+    "local" -> List("http://localhost:30020/*"),
+    "prod" -> List("https?://www.liste.ndla.no/*", "https?://liste.ndla.no/*")
+  ).getOrElse(Environment, List(s"https?://www.liste.$Environment.ndla.no/*", s"https?://liste.$Environment.ndla.no/*"))
+
   val NdlaApiOembedProvider = Domain
 
   val NdlaApprovedUrl = Map(
-    "local" -> List("http://api-gateway.ndla-local:30017/*"),
+    "local" -> List("http://localhost:30017/*"),
     "prod" -> List("https?://www.ndla.no/*", "https?://ndla.no/*", "https?://beta.ndla.no/*")
   ).getOrElse(Environment,
               List(s"https?://ndla-frontend.$Environment.api.ndla.no/*", s"https?://$Environment.ndla.no/*"))

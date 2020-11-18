@@ -58,6 +58,14 @@ trait ProviderService {
     val NdlaApiProvider =
       OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), removeQueryString)
 
+    val ListingFrontendEndpoint = OEmbedEndpoint(Some(OEmbedProxyProperties.ListingFrontendApprovedUrls),
+                                                 Some(OEmbedProxyProperties.ListingFrontendOembedServiceUrl),
+                                                 None,
+                                                 None)
+
+    val ListingFrontendProvider =
+      OEmbedProvider("Listing-frontend", "https://liste.ndla.no", List(ListingFrontendEndpoint))
+
     val YoutubeEndpoint =
       OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
 
@@ -110,8 +118,17 @@ trait ProviderService {
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: GoOpenProvider :: IssuuProvider :: loadProvidersFromRequest(
-        Http(OEmbedProxyProperties.JSonProviderUrl))
+      GoOpenProvider ::
+        H5PProvider ::
+        HttpNdlaProvider ::
+        HttpsNdlaProvider ::
+        IssuuProvider ::
+        ListingFrontendProvider ::
+        NdlaApiProvider ::
+        TedProvider ::
+        YoutuProvider ::
+        YoutubeProvider ::
+        loadProvidersFromRequest(Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
     def loadProvidersFromRequest(request: HttpRequest): List[OEmbedProvider] = {
