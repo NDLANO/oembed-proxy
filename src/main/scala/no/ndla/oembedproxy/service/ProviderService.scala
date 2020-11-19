@@ -64,7 +64,7 @@ trait ProviderService {
                                                  None)
 
     val ListingFrontendProvider =
-      OEmbedProvider("Listing-frontend", "https://liste.ndla.no", List(ListingFrontendEndpoint))
+      OEmbedProvider("NDLA Liste", "https://liste.ndla.no", List(ListingFrontendEndpoint))
 
     val YoutubeEndpoint =
       OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
