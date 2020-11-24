@@ -40,7 +40,7 @@ object OEmbedProxyProperties {
   val ListingFrontendApprovedUrls = Map(
     "local" -> List("http://localhost:30020/*"),
     "prod" -> List("https?://liste.ndla.no/*")
-  ).getOrElse(Environment, List(s"https?://www.liste.$Environment.ndla.no/*", s"https?://liste.$Environment.ndla.no/*"))
+  ).getOrElse(Environment, List(s"https?://liste.$Environment.ndla.no/*"))
 
   val NdlaApiOembedProvider = Domain
 
