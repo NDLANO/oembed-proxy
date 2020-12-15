@@ -31,11 +31,6 @@ trait ProviderService {
   class ProviderService extends LazyLogging {
     implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
-    val GoOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List(("oembed", "true")))
-
-    val GoOpenProvider =
-      OEmbedProvider("GoOpen.no", "http://www.goopen.no", GoOpenEndpoint :: Nil)
-
     val HttpNdlaApprovedUrls =
       List("http://ndla.no/*/node/*", "http://ndla.no/node/*")
 
@@ -59,16 +54,16 @@ trait ProviderService {
       OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), removeQueryString)
 
     val YoutubeEndpoint =
-      OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
+      OEmbedEndpoint(None, Some("https://www.youtube.com/oembed"), None, None)
 
     val YoutuProvider = OEmbedProvider("YouTube",
-                                       "http://youtu.be",
+                                       "https://youtu.be",
                                        List(YoutubeEndpoint),
                                        handleYoutubeRequestUrl,
                                        addYoutubeTimestampIfdefinedInRequest)
 
     val YoutubeProvider = OEmbedProvider("YouTube",
-                                         "http://www.youtube.com",
+                                         "https://www.youtube.com",
                                          List(YoutubeEndpoint),
                                          handleYoutubeRequestUrl,
                                          addYoutubeTimestampIfdefinedInRequest)
@@ -95,7 +90,7 @@ trait ProviderService {
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: GoOpenProvider :: IssuuProvider :: loadProvidersFromRequest(
+      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: IssuuProvider :: loadProvidersFromRequest(
         Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
