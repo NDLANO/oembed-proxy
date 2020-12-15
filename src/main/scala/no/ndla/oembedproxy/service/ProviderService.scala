@@ -31,11 +31,6 @@ trait ProviderService {
   class ProviderService extends LazyLogging {
     implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
-    val GoOpenEndpoint = OEmbedEndpoint(None, Some("http://www.goopen.no/"), None, None, List(("oembed", "true")))
-
-    val GoOpenProvider =
-      OEmbedProvider("GoOpen.no", "http://www.goopen.no", GoOpenEndpoint :: Nil)
-
     val HttpNdlaApprovedUrls =
       List("http://ndla.no/*/node/*", "http://ndla.no/node/*")
 
@@ -58,21 +53,6 @@ trait ProviderService {
     val NdlaApiProvider =
       OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), removeQueryString)
 
-    val YoutubeEndpoint =
-      OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), None, None)
-
-    val YoutuProvider = OEmbedProvider("YouTube",
-                                       "http://youtu.be",
-                                       List(YoutubeEndpoint),
-                                       handleYoutubeRequestUrl,
-                                       addYoutubeTimestampIfdefinedInRequest)
-
-    val YoutubeProvider = OEmbedProvider("YouTube",
-                                         "http://www.youtube.com",
-                                         List(YoutubeEndpoint),
-                                         handleYoutubeRequestUrl,
-                                         addYoutubeTimestampIfdefinedInRequest)
-
     val H5PApprovedUrls = List(OEmbedProxyProperties.NdlaH5PApprovedUrl)
 
     val H5PEndpoint =
@@ -83,19 +63,13 @@ trait ProviderService {
     val TedEndpoint = OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/talks/oembed.json"), None, None)
     val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), removeQueryString)
 
-    val IssuuApprovedUrls = List("http://issuu.com/*", "https://issuu.com/*")
-
-    val IssuuEndpoint =
-      OEmbedEndpoint(Some(IssuuApprovedUrls), Some("https://issuu.com/oembed"), None, None, List(("iframe", "true")))
-    val IssuuProvider = OEmbedProvider("Issuu", "https://issuu.com", List(IssuuEndpoint), removeQueryStringAndFragment)
-
     val loadProviders = Memoize(() => {
       logger.info("Provider cache was not found or out of date, fetching providers")
       _loadProviders()
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: GoOpenProvider :: IssuuProvider :: loadProvidersFromRequest(
+      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: loadProvidersFromRequest(
         Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
