@@ -27,8 +27,8 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
 
   val youtubeProvider = OEmbedProvider(
     "YouTube",
-    "http://www.youtube.com/",
-    List(OEmbedEndpoint(None, Some("http://www.youtube.com/oembed"), Some(true), None)))
+    "https://www.youtube.com/",
+    List(OEmbedEndpoint(None, Some("https://www.youtube.com/oembed"), Some(true), None)))
 
   val OEmbedResponse = OEmbed(
     "rich",
