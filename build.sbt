@@ -1,13 +1,13 @@
 import java.util.Properties
 
-val Scalaversion = "2.13.1"
+val Scalaversion = "2.13.3"
 val Scalatraversion = "2.7.0"
 val ScalaLoggingVersion = "3.9.2"
-val Log4JVersion = "2.11.1"
-val JacksonVersion = "2.10.5.1"
+val Log4JVersion = "2.13.3"
+val JacksonVersion = "2.11.2"
 val Jettyversion = "9.4.33.v20201020"
-val ScalaTestVersion = "3.1.1"
-val MockitoVersion = "1.11.4"
+val ScalaTestVersion = "3.2.1"
+val MockitoVersion = "1.14.8"
 val Json4SVersion = "3.6.7"
 
 val appProperties = settingKey[Properties]("The application properties")
@@ -18,6 +18,12 @@ appProperties := {
   prop
 }
 
+// Sometimes we override transitive dependencies because of vulnerabilities, we put these here
+val vulnerabilityOverrides = Seq(
+  "org.apache.httpcomponents" % "httpclient" % "4.5.13",
+  "commons-codec" % "commons-codec" % "1.14"
+)
+
 lazy val oembed_proxy = (project in file("."))
   .settings(
     name := "oembed-proxy",
@@ -27,7 +33,7 @@ lazy val oembed_proxy = (project in file("."))
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.43",
+      "ndla" %% "network" % "0.44",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
@@ -36,8 +42,6 @@ lazy val oembed_proxy = (project in file("."))
       "org.scalatra" %% "scalatra-scalatest" % Scalatraversion % "test",
       "org.eclipse.jetty" % "jetty-webapp" % Jettyversion % "container;compile",
       "org.eclipse.jetty" % "jetty-plus" % Jettyversion % "container",
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.8.11",
       "javax.servlet" % "javax.servlet-api" % "3.1.0" % "container;provided;test",
       "org.scalatra" %% "scalatra-json" % Scalatraversion,
       "org.json4s" %% "json4s-native" % Json4SVersion,
@@ -48,7 +52,7 @@ lazy val oembed_proxy = (project in file("."))
       "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
       "org.mockito" %% "mockito-scala" % MockitoVersion % "test",
       "org.mockito" %% "mockito-scala-scalatest" % MockitoVersion % "test"
-    )
+    ) ++ vulnerabilityOverrides
   )
   .enablePlugins(DockerPlugin)
   .enablePlugins(JettyPlugin)
