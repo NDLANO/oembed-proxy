@@ -1,5 +1,5 @@
 # oEmbed Proxy
-[![Build Status](https://travis-ci.org/NDLANO/oembed-proxy.svg?branch=master)](https://travis-ci.org/NDLANO/oembed-proxy)
+![CI](https://github.com/NDLANO/oembed-proxy/workflows/CI/badge.svg)
 
 ## Usage
 Proxy for making oEmbed requests to known oEmbed providers without running into CORS problems.
