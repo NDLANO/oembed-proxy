@@ -21,16 +21,15 @@ import scalaj.http.HttpRequest
 
 class OEmbedServiceTest extends UnitSuite with TestEnvironment {
 
-  val ndlaProvider = OEmbedProvider("ndla",
-                                    "http://ndla.no",
-                                    List(OEmbedEndpoint(None, Some("http://ndla.no/services/oembed"), None, None)))
+  val ndlaProvider: OEmbedProvider =
+    OEmbedProvider("ndla", "http://ndla.no", List(OEmbedEndpoint(None, Some("http://ndla.no/oembed"), None, None)))
 
-  val youtubeProvider = OEmbedProvider(
+  val youtubeProvider: OEmbedProvider = OEmbedProvider(
     "YouTube",
     "https://www.youtube.com/",
     List(OEmbedEndpoint(None, Some("https://www.youtube.com/oembed"), Some(true), None)))
 
-  val OEmbedResponse = OEmbed(
+  val OEmbedResponse: OEmbed = OEmbed(
     "rich",
     "1.0",
     Some("A Confectioner in the UK"),
@@ -51,8 +50,8 @@ class OEmbedServiceTest extends UnitSuite with TestEnvironment {
 
   override val oEmbedService = new OEmbedService(Some(List(ndlaProvider, youtubeProvider)))
   val providerMemoize = new Memoize(0, 0, () => List[OEmbedProvider](), false)
-  override val providerService = new ProviderService {
-    override val loadProviders = providerMemoize
+  override val providerService: ProviderService = new ProviderService {
+    override val loadProviders: Memoize[List[OEmbedProvider]] = providerMemoize
   }
 
   test("That get returns Failure(ProviderNotSupportedException) when no providers support the url") {

@@ -22,7 +22,7 @@ object Error {
   val PROVIDER_NOT_SUPPORTED = "PROVIDER NOT SUPPORTED"
   val REMOTE_ERROR = "REMOTE ERROR"
 
-  val GenericError = Error(
+  val GenericError: Error = Error(
     GENERIC,
     s"Ooops. Something we didn't anticipate occured. We have logged the error, and will look into it. But feel free to contact ${OEmbedProxyProperties.ContactEmail} if the error persists."
   )

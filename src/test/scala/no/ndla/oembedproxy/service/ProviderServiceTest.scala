@@ -19,11 +19,12 @@ import scalaj.http.{Http, HttpRequest}
 
 class ProviderServiceTest extends UnitSuite with TestEnvironment {
 
-  val IncompleteProvider = OEmbedProvider("gfycat",
-                                          "https://gfycat.com",
-                                          List(OEmbedEndpoint(Some(List("http://gfycat.com/*")), None, None, None)))
+  val IncompleteProvider: OEmbedProvider = OEmbedProvider(
+    "gfycat",
+    "https://gfycat.com",
+    List(OEmbedEndpoint(Some(List("http://gfycat.com/*")), None, None, None)))
 
-  val CompleteProvider = OEmbedProvider(
+  val CompleteProvider: OEmbedProvider = OEmbedProvider(
     "IFTTT",
     "http://www.ifttt.com",
     List(
