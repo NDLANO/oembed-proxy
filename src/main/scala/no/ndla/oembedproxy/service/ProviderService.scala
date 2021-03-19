@@ -31,10 +31,10 @@ trait ProviderService {
   class ProviderService extends LazyLogging {
     implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
-    val NdlaApiApprovedUrls: List[String] = OEmbedProxyProperties.NdlaApprovedUrl
+    val NdlaFrontendApprovedUrls: List[String] = OEmbedProxyProperties.NdlaApprovedUrl
 
-    val NdlaApiEndpoint: OEmbedEndpoint =
-      OEmbedEndpoint(Some(NdlaApiApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
+    val NdlaFrontendEndpoint: OEmbedEndpoint =
+      OEmbedEndpoint(Some(NdlaFrontendApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
 
     val ListingFrontendEndpoint: OEmbedEndpoint =
       OEmbedEndpoint(Some(OEmbedProxyProperties.ListingFrontendApprovedUrls),
@@ -45,17 +45,14 @@ trait ProviderService {
     val NdlaApiProvider: OEmbedProvider =
       OEmbedProvider("NDLA Api",
                      OEmbedProxyProperties.NdlaApiOembedProvider,
-                     List(NdlaApiEndpoint, ListingFrontendEndpoint),
+                     List(NdlaFrontendEndpoint, ListingFrontendEndpoint),
                      removeQueryString)
 
-    val YoutubeEndpoint: OEmbedEndpoint =
-      OEmbedEndpoint(None, Some("https://www.youtube.com/oembed"), None, None)
-
-    val YoutuProvider: OEmbedProvider = OEmbedProvider("YouTube",
-                                                       "https://youtu.be",
-                                                       List(YoutubeEndpoint),
-                                                       handleYoutubeRequestUrl,
-                                                       addYoutubeTimestampIfdefinedInRequest)
+    val YoutubeEndpoint: OEmbedEndpoint = OEmbedEndpoint(
+      Some(List("https://*.youtube.com/watch*", "https://*.youtube.com/v/*", "https://youtu.be/*")),
+      Some("https://www.youtube.com/oembed"),
+      None,
+      None)
 
     val YoutubeProvider: OEmbedProvider = OEmbedProvider("YouTube",
                                                          "https://www.youtube.com",
@@ -104,7 +101,7 @@ trait ProviderService {
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: IssuuProvider :: loadProvidersFromRequest(
+      NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: IssuuProvider :: loadProvidersFromRequest(
         Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 

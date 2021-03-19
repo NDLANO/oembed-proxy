@@ -13,13 +13,13 @@ import no.ndla.oembedproxy.UnitSuite
 class OEmbedProviderTest extends UnitSuite {
 
   val youtubeProvider: OEmbedProvider =
-    OEmbedProvider("youtube", "http://www.youtube.com", List())
+    OEmbedProvider("youtube", "https://www.youtube.com", List())
 
   val ndlaEndpoint: OEmbedEndpoint =
-    OEmbedEndpoint(Some(List("http://www.ndla.no/*/123")), None, None, None)
+    OEmbedEndpoint(Some(List("https://www.ndla.no/*/123")), Some("https://ndla.no/oembed"), None, None)
 
   val youtubeEndpoint: OEmbedEndpoint =
-    OEmbedEndpoint(Some(List("http://www.youtube.com/*")), None, None, None)
+    OEmbedEndpoint(Some(List("https://www.youtube.com/*")), Some("https://www.youtube.com/oembed"), None, None)
 
   test("That hostMatches returns true for same host, regardless of protocol") {
     youtubeProvider.hostMatches("https://www.youtube.com") should be(right = true)
@@ -35,19 +35,19 @@ class OEmbedProviderTest extends UnitSuite {
   }
 
   test("That supports returns true when host matches") {
-    youtubeProvider.supports("http://www.youtube.com") should be(right = true)
+    youtubeProvider.supports("https://www.youtube.com") should be(right = true)
   }
 
   test("That supports returns true when endpoints matches") {
     youtubeProvider
       .copy(endpoints = List(ndlaEndpoint))
-      .supports("http://www.ndla.no/nb/123") should be(right = true)
+      .supports("https://www.ndla.no/nb/123") should be(right = true)
   }
 
   test("That support returns false when neither endpoints or host matches") {
     youtubeProvider
       .copy(endpoints = List(youtubeEndpoint))
-      .supports("http://www.ndla.no/nb/123") should be(right = false)
+      .supports("https://www.ndla.no/nb/123") should be(right = false)
   }
 
   test("That requestUrl throws exception when no endpoints have embedUrl defined") {
@@ -60,34 +60,35 @@ class OEmbedProviderTest extends UnitSuite {
 
   test("That {format} is replaced in embedUrl") {
     val endpoint =
-      youtubeEndpoint.copy(url = Some("http://www.youtube.com/oembed.{format}"))
+      youtubeEndpoint.copy(url = Some("https://www.youtube.com/oembed.{format}"))
     val requestUrl = youtubeProvider
       .copy(endpoints = List(endpoint))
-      .requestUrl("ABC", None, None)
-    requestUrl should equal("http://www.youtube.com/oembed.json?url=ABC&format=json")
+      .requestUrl("https://www.youtube.com/v/ABC", None, None)
+    requestUrl should equal("https://www.youtube.com/oembed.json?url=https://www.youtube.com/v/ABC&format=json")
   }
 
   test("That maxwidth is appended correctly") {
-    val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
+    val endpoint = youtubeEndpoint.copy(url = Some("https://youtube.com/oembed"))
     val requestUrl = youtubeProvider
       .copy(endpoints = List(endpoint))
-      .requestUrl("ABC", Some("100"), None)
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxwidth=100")
+      .requestUrl("https://www.youtube.com/v/ABC", Some("100"), None)
+    requestUrl should equal("https://youtube.com/oembed?url=https://www.youtube.com/v/ABC&format=json&maxwidth=100")
   }
 
   test("That maxheight is appended correctly") {
-    val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
+    val endpoint = youtubeEndpoint.copy(url = Some("https://youtube.com/oembed"))
     val requestUrl = youtubeProvider
       .copy(endpoints = List(endpoint))
-      .requestUrl("ABC", None, Some("100"))
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxheight=100")
+      .requestUrl("https://www.youtube.com/v/ABC", None, Some("100"))
+    requestUrl should equal("https://youtube.com/oembed?url=https://www.youtube.com/v/ABC&format=json&maxheight=100")
   }
 
   test("That both maxwidth and maxheight are appended correctly") {
-    val endpoint = youtubeEndpoint.copy(url = Some("http://youtube.com/oembed"))
+    val endpoint = youtubeEndpoint.copy(url = Some("https://youtube.com/oembed"))
     val requestUrl = youtubeProvider
       .copy(endpoints = List(endpoint))
-      .requestUrl("ABC", Some("100"), Some("200"))
-    requestUrl should equal("http://youtube.com/oembed?url=ABC&format=json&maxwidth=100&maxheight=200")
+      .requestUrl("https://www.youtube.com/v/ABC", Some("100"), Some("200"))
+    requestUrl should equal(
+      "https://youtube.com/oembed?url=https://www.youtube.com/v/ABC&format=json&maxwidth=100&maxheight=200")
   }
 }
