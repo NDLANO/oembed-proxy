@@ -31,10 +31,11 @@ trait ProviderService {
   class ProviderService extends LazyLogging {
     implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
-    val NdlaFrontendApprovedUrls: List[String] = OEmbedProxyProperties.NdlaApprovedUrl
-
     val NdlaFrontendEndpoint: OEmbedEndpoint =
-      OEmbedEndpoint(Some(NdlaFrontendApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
+      OEmbedEndpoint(Some(OEmbedProxyProperties.NdlaApprovedUrl),
+                     Some(OEmbedProxyProperties.NdlaFrontendOembedServiceUrl),
+                     None,
+                     None)
 
     val ListingFrontendEndpoint: OEmbedEndpoint =
       OEmbedEndpoint(Some(OEmbedProxyProperties.ListingFrontendApprovedUrls),

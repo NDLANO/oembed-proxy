@@ -27,7 +27,7 @@ object OEmbedProxyProperties {
   val ProviderListCacheAgeInMs: Long = 1000 * 60 * 60 * 24 // 24 hour caching
   val ProviderListRetryTimeInMs: Long = 1000 * 60 * 60 // 1 hour before retrying a failed attempt.
 
-  val NdlaApiOembedServiceUrl: String = Map(
+  val NdlaFrontendOembedServiceUrl: String = Map(
     "local" -> "http://ndla-frontend.ndla-local/oembed",
     "prod" -> "https://ndla.no/oembed"
   ).getOrElse(Environment, s"https://$Environment.ndla.no/oembed")
@@ -52,13 +52,11 @@ object OEmbedProxyProperties {
   val NdlaH5POembedProvider: String = Map(
     "staging" -> "https://h5p-staging.ndla.no",
     "prod" -> "https://h5p.ndla.no",
-    "ff" -> "https://h5p-ff.ndla.no"
   ).getOrElse(Environment, "https://h5p-test.ndla.no")
 
   val NdlaH5PApprovedUrl: String = Map(
     "staging" -> "https://h5p-staging.ndla.no/resource/*",
     "prod" -> "https://h5p.ndla.no/resource/*",
-    "ff" -> "https://h5p-ff.ndla.no/resource/*"
   ).getOrElse(Environment, "https://h5p-test.ndla.no/resource/*")
 
   val OembedProxyControllerMountPoint = "/oembed-proxy/v1/oembed"
