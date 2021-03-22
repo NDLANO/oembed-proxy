@@ -46,8 +46,7 @@ trait ProviderService {
     val NdlaApiProvider: OEmbedProvider =
       OEmbedProvider("NDLA Api",
                      OEmbedProxyProperties.NdlaApiOembedProvider,
-                     List(NdlaFrontendEndpoint, ListingFrontendEndpoint),
-                     removeQueryString)
+                     List(NdlaFrontendEndpoint, ListingFrontendEndpoint))
 
     val YoutubeEndpoint: OEmbedEndpoint = OEmbedEndpoint(
       Some(List("https://*.youtube.com/watch*", "https://*.youtube.com/v/*", "https://youtu.be/*")),
