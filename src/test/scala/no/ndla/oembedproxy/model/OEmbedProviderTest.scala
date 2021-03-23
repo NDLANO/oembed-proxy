@@ -16,7 +16,10 @@ class OEmbedProviderTest extends UnitSuite {
     OEmbedProvider("youtube", "https://www.youtube.com", List())
 
   val ndlaEndpoint: OEmbedEndpoint =
-    OEmbedEndpoint(Some(List("https://www.ndla.no/*/123")), Some("https://ndla.no/oembed"), None, None)
+    OEmbedEndpoint(Some(List("https://ndla.no/*/123")), Some("https://ndla.no/oembed"), None, None)
+
+  val ndlaListEndpoint: OEmbedEndpoint =
+    OEmbedEndpoint(Some(List("https://liste.ndla.no/*")), Some("https://liste.ndla.no/oembed"), None, None)
 
   val youtubeEndpoint: OEmbedEndpoint =
     OEmbedEndpoint(Some(List("https://www.youtube.com/*")), Some("https://www.youtube.com/oembed"), None, None)
@@ -39,9 +42,9 @@ class OEmbedProviderTest extends UnitSuite {
   }
 
   test("That supports returns true when endpoints matches") {
-    youtubeProvider
-      .copy(endpoints = List(ndlaEndpoint))
-      .supports("https://www.ndla.no/nb/123") should be(right = true)
+    val provider = youtubeProvider.copy(endpoints = List(ndlaEndpoint, ndlaListEndpoint))
+    provider.supports("https://ndla.no/nb/123") should be(right = true)
+    provider.supports("https://liste.ndla.no/nb/123") should be(right = true)
   }
 
   test("That support returns false when neither endpoints or host matches") {
