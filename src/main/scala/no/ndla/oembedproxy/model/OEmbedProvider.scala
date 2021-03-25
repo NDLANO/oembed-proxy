@@ -28,7 +28,7 @@ case class OEmbedProvider(providerName: String,
   }
 
   private def _requestUrl(url: String, maxWidth: Option[String], maxHeight: Option[String]): String = {
-    endpoints.find(_.supports(url)).find(e => e.url.isDefined) match {
+    endpoints.collectFirst { case e if e.supports(url) && e.url.isDefined => e } match {
       case None =>
         throw new RuntimeException(s"The provider '$providerName' has no embed-url available")
       case Some(endpoint) =>
