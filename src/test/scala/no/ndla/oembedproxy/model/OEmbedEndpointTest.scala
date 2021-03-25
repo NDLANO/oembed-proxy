@@ -12,7 +12,7 @@ import no.ndla.oembedproxy.UnitSuite
 
 class OEmbedEndpointTest extends UnitSuite {
 
-  val dummyEndpoint = OEmbedEndpoint(None, None, None, None)
+  val dummyEndpoint: OEmbedEndpoint = OEmbedEndpoint(None, None, None, None)
 
   test("That matches returns true for a matching expression") {
     dummyEndpoint.matches("http://www.ndla.no/*/test", "http://www.ndla.no/123123/test") should be(right = true)
@@ -21,7 +21,7 @@ class OEmbedEndpointTest extends UnitSuite {
     dummyEndpoint.matches("a.*.c", "a.b.c") should be(right = true)
   }
 
-  test("That matches returns true for a non-matching expression") {
+  test("That matches returns false for a non-matching expression") {
     dummyEndpoint.matches("http://www.ndla.no/*/test", "http://www.ndla.no/test") should be(right = false)
     dummyEndpoint.matches("http://www.ndla.no/*/test/*", "https://www.ndla.no/nb/test/123") should be(right = false)
   }

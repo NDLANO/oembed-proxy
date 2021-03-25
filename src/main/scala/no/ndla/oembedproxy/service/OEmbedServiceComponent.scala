@@ -11,6 +11,7 @@ package no.ndla.oembedproxy.service
 import com.typesafe.scalalogging.LazyLogging
 import no.ndla.network.NdlaClient
 import no.ndla.oembedproxy.model.{OEmbed, OEmbedProvider, ProviderNotSupportedException}
+import org.json4s.DefaultFormats
 
 import scala.util.{Failure, Try}
 import scalaj.http.{Http, HttpOptions}
@@ -20,9 +21,9 @@ trait OEmbedServiceComponent extends LazyLogging {
   val oEmbedService: OEmbedService
 
   class OEmbedService(optionalProviders: Option[List[OEmbedProvider]] = None) {
-    implicit val formats = org.json4s.DefaultFormats
+    implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
 
-    val remoteTimeout = 10 * 1000 // 10 Seconds
+    val remoteTimeout: Int = 10 * 1000 // 10 Seconds
 
     private lazy val providers = optionalProviders.toList.flatten ++ providerService
       .loadProviders()

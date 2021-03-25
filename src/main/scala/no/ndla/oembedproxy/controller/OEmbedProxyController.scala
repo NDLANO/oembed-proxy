@@ -39,13 +39,13 @@ trait OEmbedProxyController {
 
     registerModel[Error]()
 
-    val response400 = ResponseMessage(400, "Validation error", Some("Error"))
-    val response401 = ResponseMessage(401, "Unauthorized")
-    val response500 = ResponseMessage(500, "Unknown error", Some("Error"))
+    val response400: ResponseMessage = ResponseMessage(400, "Validation error", Some("Error"))
+    val response401: ResponseMessage = ResponseMessage(401, "Unauthorized")
+    val response500: ResponseMessage = ResponseMessage(500, "Unknown error", Some("Error"))
 
-    val response501 =
+    val response501: ResponseMessage =
       ResponseMessage(501, "Provider Not Supported", Some("Error"))
-    val response502 = ResponseMessage(502, "Bad Gateway", Some("Error"))
+    val response502: ResponseMessage = ResponseMessage(502, "Bad Gateway", Some("Error"))
 
     case class Param(paramName: String, description: String)
 

@@ -18,7 +18,7 @@ object ComponentRegistry
     with NdlaClient
     with ProviderService
     with HealthController {
-  implicit val swagger = new OEmbedSwagger
+  implicit val swagger: OEmbedSwagger = new OEmbedSwagger
 
   lazy val providerService = new ProviderService
   lazy val oEmbedService = new OEmbedService

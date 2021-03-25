@@ -31,56 +31,42 @@ trait ProviderService {
   class ProviderService extends LazyLogging {
     implicit val formats: DefaultFormats = org.json4s.DefaultFormats
 
-    val HttpNdlaApprovedUrls =
-      List("http://ndla.no/*/node/*", "http://ndla.no/node/*")
+    val NdlaFrontendEndpoint: OEmbedEndpoint =
+      OEmbedEndpoint(Some(OEmbedProxyProperties.NdlaApprovedUrl),
+                     Some(OEmbedProxyProperties.NdlaFrontendOembedServiceUrl),
+                     None,
+                     None)
 
-    val HttpNdlaEndpoint =
-      OEmbedEndpoint(Some(HttpNdlaApprovedUrls), Some("http://ndla.no/services/oembed"), None, None)
-    val HttpNdlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(HttpNdlaEndpoint), removeQueryString)
+    val ListingFrontendEndpoint: OEmbedEndpoint =
+      OEmbedEndpoint(Some(OEmbedProxyProperties.ListingFrontendApprovedUrls),
+                     Some(OEmbedProxyProperties.ListingFrontendOembedServiceUrl),
+                     None,
+                     None)
 
-    val HttpsNdlaApprovedUrls =
-      List("https://ndla.no/*/node/*", "https://ndla.no/node/*")
+    val NdlaApiProvider: OEmbedProvider =
+      OEmbedProvider("NDLA Api",
+                     OEmbedProxyProperties.NdlaApiOembedProvider,
+                     List(NdlaFrontendEndpoint, ListingFrontendEndpoint))
 
-    val HttpsNdlaEndpoint =
-      OEmbedEndpoint(Some(HttpsNdlaApprovedUrls), Some("https://ndla.no/services/oembed"), None, None)
-    val HttpsNdlaProvider = OEmbedProvider("ndla", "http://www.ndla.no", List(HttpsNdlaEndpoint), removeQueryString)
+    val YoutubeEndpoint: OEmbedEndpoint = OEmbedEndpoint(
+      Some(List("https://*.youtube.com/watch*", "https://*.youtube.com/v/*", "https://youtu.be/*")),
+      Some("https://www.youtube.com/oembed"),
+      None,
+      None)
 
-    val NdlaApiApprovedUrls = OEmbedProxyProperties.NdlaApprovedUrl
-
-    val NdlaApiEndpoint =
-      OEmbedEndpoint(Some(NdlaApiApprovedUrls), Some(OEmbedProxyProperties.NdlaApiOembedServiceUrl), None, None)
-
-    val NdlaApiProvider =
-      OEmbedProvider("NDLA Api", OEmbedProxyProperties.NdlaApiOembedProvider, List(NdlaApiEndpoint), removeQueryString)
-
-    val ListingFrontendEndpoint = OEmbedEndpoint(Some(OEmbedProxyProperties.ListingFrontendApprovedUrls),
-                                                 Some(OEmbedProxyProperties.ListingFrontendOembedServiceUrl),
-                                                 None,
-                                                 None)
-
-    val ListingFrontendProvider =
-      OEmbedProvider("NDLA Liste", "https://liste.ndla.no", List(ListingFrontendEndpoint))
-
-    val YoutubeEndpoint =
-      OEmbedEndpoint(None, Some("https://www.youtube.com/oembed"), None, None)
-
-    val YoutuProvider = OEmbedProvider("YouTube",
-                                       "https://youtu.be",
-                                       List(YoutubeEndpoint),
-                                       handleYoutubeRequestUrl,
-                                       addYoutubeTimestampIfdefinedInRequest)
-
-    val YoutubeProvider = OEmbedProvider("YouTube",
-                                         "https://www.youtube.com",
-                                         List(YoutubeEndpoint),
-                                         handleYoutubeRequestUrl,
-                                         addYoutubeTimestampIfdefinedInRequest)
+    val YoutubeProvider: OEmbedProvider = OEmbedProvider("YouTube",
+                                                         "https://www.youtube.com",
+                                                         List(YoutubeEndpoint),
+                                                         handleYoutubeRequestUrl,
+                                                         addYoutubeTimestampIfdefinedInRequest)
 
     val H5PApprovedUrls = List(OEmbedProxyProperties.NdlaH5PApprovedUrl)
 
-    val H5PEndpoint =
+    val H5PEndpoint: OEmbedEndpoint =
       OEmbedEndpoint(Some(H5PApprovedUrls), Some(s"${OEmbedProxyProperties.NdlaH5POembedProvider}/oembed"), None, None)
-    val H5PProvider = OEmbedProvider("H5P", OEmbedProxyProperties.NdlaH5POembedProvider, List(H5PEndpoint))
+
+    val H5PProvider: OEmbedProvider =
+      OEmbedProvider("H5P", OEmbedProxyProperties.NdlaH5POembedProvider, List(H5PEndpoint))
 
     val TedApprovedUrls = List(
       "https://www.ted.com/talks/*",
@@ -97,23 +83,25 @@ trait ProviderService {
       "embed.ted.com/talks/*"
     )
 
-    val TedEndpoint =
+    val TedEndpoint: OEmbedEndpoint =
       OEmbedEndpoint(Some(TedApprovedUrls), Some("https://www.ted.com/services/v1/oembed.json"), None, None)
-    val TedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), removeQueryString)
+    val TedProvider: OEmbedProvider = OEmbedProvider("Ted", "https://ted.com", List(TedEndpoint), removeQueryString)
 
     val IssuuApprovedUrls = List("http://issuu.com/*", "https://issuu.com/*")
 
-    val IssuuEndpoint =
+    val IssuuEndpoint: OEmbedEndpoint =
       OEmbedEndpoint(Some(IssuuApprovedUrls), Some("https://issuu.com/oembed"), None, None, List(("iframe", "true")))
-    val IssuuProvider = OEmbedProvider("Issuu", "https://issuu.com", List(IssuuEndpoint), removeQueryStringAndFragment)
 
-    val loadProviders = Memoize(() => {
+    val IssuuProvider: OEmbedProvider =
+      OEmbedProvider("Issuu", "https://issuu.com", List(IssuuEndpoint), removeQueryStringAndFragment)
+
+    val loadProviders: Memoize[List[OEmbedProvider]] = Memoize(() => {
       logger.info("Provider cache was not found or out of date, fetching providers")
       _loadProviders()
     })
 
     def _loadProviders(): List[OEmbedProvider] = {
-      HttpNdlaProvider :: HttpsNdlaProvider :: NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: YoutuProvider :: IssuuProvider :: loadProvidersFromRequest(
+      NdlaApiProvider :: TedProvider :: H5PProvider :: YoutubeProvider :: IssuuProvider :: loadProvidersFromRequest(
         Http(OEmbedProxyProperties.JSonProviderUrl))
     }
 
