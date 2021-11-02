@@ -36,7 +36,7 @@ lazy val oembed_proxy = (project in file("."))
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.44",
+      "ndla" %% "network" % "0.47",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
