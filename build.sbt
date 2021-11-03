@@ -1,14 +1,14 @@
 import java.util.Properties
 
 val Scalaversion = "2.13.3"
-val Scalatraversion = "2.7.1"
+val Scalatraversion = "2.8.2"
 val ScalaLoggingVersion = "3.9.2"
 val Log4JVersion = "2.13.3"
 val JacksonVersion = "2.12.1"
 val Jettyversion = "9.4.35.v20201120"
 val ScalaTestVersion = "3.2.1"
 val MockitoVersion = "1.14.8"
-val Json4SVersion = "3.6.7"
+val Json4SVersion = "4.0.3"
 
 val appProperties = settingKey[Properties]("The application properties")
 
@@ -36,7 +36,7 @@ lazy val oembed_proxy = (project in file("."))
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     scalacOptions := Seq("-target:jvm-1.8", "-deprecation"),
     libraryDependencies ++= Seq(
-      "ndla" %% "network" % "0.44",
+      "ndla" %% "network" % "0.47",
       "com.typesafe.scala-logging" %% "scala-logging" % ScalaLoggingVersion,
       "org.apache.logging.log4j" % "log4j-api" % Log4JVersion,
       "org.apache.logging.log4j" % "log4j-core" % Log4JVersion,
