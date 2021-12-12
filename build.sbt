@@ -3,7 +3,7 @@ import java.util.Properties
 val Scalaversion = "2.13.3"
 val Scalatraversion = "2.8.2"
 val ScalaLoggingVersion = "3.9.2"
-val Log4JVersion = "2.13.3"
+val Log4JVersion = "2.15.0"
 val JacksonVersion = "2.12.1"
 val Jettyversion = "9.4.35.v20201120"
 val ScalaTestVersion = "3.2.1"
